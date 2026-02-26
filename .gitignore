@@ -1,4 +1,4 @@
-# Operating System Files
+# ─── OS ───
 .DS_Store
 .DS_Store?
 ._*
@@ -8,7 +8,7 @@ ehthumbs.db
 Thumbs.db
 Desktop.ini
 
-# Editor/IDE Files
+# ─── Editor / IDE ───
 .vscode/
 .idea/
 *.swp
@@ -18,24 +18,36 @@ Desktop.ini
 .classpath
 .settings/
 
-# Temporary Files
+# ─── Cursor / plans (development) ───
+.cursor/
+.cursorrules
+
+# ─── Development docs & markdown (ne į repo) ───
+*.md
+!README.md
+docs/
+
+# ─── Temporary & build ───
 *.tmp
 *.temp
 *.log
 *.cache
-
-# Node modules (if you add any in the future)
-node_modules/
-package-lock.json
-yarn.lock
-
-# Environment files
-.env
-.env.local
-.env.*.local
-
-# Build outputs (if any)
 dist/
 build/
 *.min.js
 *.min.css
+
+# ─── Node ───
+node_modules/
+package-lock.json
+yarn.lock
+npm-debug.log*
+
+# ─── Env / secrets ───
+.env
+.env.local
+.env.*.local
+*.pem
+
+# ─── Optional: jei nori laikyti repo dar minimalesnį ───
+# google-apps-script.js

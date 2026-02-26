@@ -1,0 +1,12 @@
+{
+  "standard": "WCAG2AA",
+  "ignore": ["warning"],
+  "chromeLaunchConfig": {
+    "args": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu"
+    ]
+  }
+}

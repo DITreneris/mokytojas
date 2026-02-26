@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turinio DI sistema – rinkodaros vadovams</title>
+    <title>HR kasdienė atrankos sistema – DI promptai</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <style>html { scroll-behavior: smooth; }</style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -17,30 +17,57 @@
         }
 
         :root {
-            /* Spin-off Nr. 2 – oranžinė CTA paletė (aukštesnis CTA) */
+            /* Spin-off Nr. 3 – HR atranka, žalia CTA paletė */
             --bg: #F7F8FA;
             --white: #FFFFFF;
             --text: #1A202C;
             --text-light: #4A5568;
             --border: #CBD5E0;
 
-            /* Pagrindinis akcentas – oranžinė, ~12% mažesnis saturation (mažiau agresyvu); WCAG2AA 4.5:1 */
-            --accent-primary: #c75515;
-            --accent-primary-hover: #b54f14;
-            --accent-gold: #c75515;
-            --accent-gold-dark: #b54f14;
+            /* Design tokens – premium SaaS (C-level) */
+            --r-card: 16px;
+            --r-btn: 12px;
+            --r-badge: 10px;
+            --r-hero: 24px;
+            --border-width: 1px;
+            --border-subtle: rgba(203, 213, 224, 0.6);
+            --border-subtle-dark: rgba(60, 72, 90, 0.15);
+            --shadow-soft: 0 2px 8px rgba(60, 72, 90, 0.06), 0 1px 2px rgba(60, 72, 90, 0.04);
+            --shadow-medium: 0 4px 16px rgba(60, 72, 90, 0.08), 0 2px 4px rgba(60, 72, 90, 0.04);
+            --shadow-elevated: 0 10px 30px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.03);
+            --shadow-card: var(--shadow-soft);
+            --shadow-card-hover: var(--shadow-medium);
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-28: 28px;
+            --space-32: 32px;
+
+            /* Pagrindinis akcentas – žalia; WCAG2AA 4.5:1 */
+            --accent-primary: #0E7A33;
+            --accent-primary-hover: #0B6B2D;
+            --accent-gold: #0E7A33;
+            --accent-gold-dark: #0B6B2D;
 
             /* Antrinis akcentas (tamsiai pilka) – hero, outline mygtukai */
             --accent-dark: #3C485A;
             --accent-dark-hover: #2D3848;
 
-            /* Hero: tamsesnis viršuje, šviesesnis apačioje; sumažintas saturation */
-            --hero-gradient-start: #a85c32;
-            --hero-gradient-mid: #c46d3d;
-            --hero-gradient-end: #dc8f5e;
-            --cta-bg: #c75515;
+            /* Hero: žalia, ~15–20% mažesnė saturacija – ramus, autoritetingas HR, ne fintech */
+            --hero-gradient-start: #1e6b42;
+            --hero-gradient-mid: #2a7a52;
+            --hero-gradient-end: #4a9572;
+            --cta-bg: #0E7A33;
             --cta-text: #FFFFFF;
             --cta-hover: var(--accent-primary-hover);
+
+            /* Hero pagrindinis CTA – baltas mygtukas, žalias tekstas (akys per <1 s) */
+            --cta-hero-bg: #FFFFFF;
+            --cta-hero-text: #0B6B2D;
+            --cta-hero-hover-bg: #F0FDF4;
+            --cta-hero-hover-text: #0B6B2D;
 
             /* Tertiarinė (bibliotekos identitetas) – teal */
             --tertiary: #0D9488;
@@ -48,19 +75,46 @@
             --tertiary-hover: #0f766e;
             --tertiary-light: #CCFBF1;
 
-            /* Semantiniai – suderinti su oranžine palete */
+            /* Semantiniai – suderinti su žalia palete */
             --blue: #3C485A;
             --blue-light: #E8ECF0;
-            --orange: #c75515;
-            --orange-light: #FFF7ED;
+            --orange: #0E7A33;
+            --orange-light: #ECFDF5;
             --green: #38A169;
             --green-dark: #2F855A;
             --error: #E53E3E;
             --bg-subtle: #F7FAFC;
 
-            /* Community CTA – palikta green (hierarchija) arba suderinta */
+            /* Community CTA – suderinta su žalia tema */
             --community-cta-green: #0E7A33;
             --community-cta-green-hover: #0B6B2D;
+
+            /* Lucide ikonų dydžiai – premium SaaS */
+            --icon-size-sm: 16px;
+            --icon-size-md: 20px;
+            --icon-size-lg: 24px;
+        }
+
+        /* Lucide ikonos – nuoseklus stilius */
+        .icon {
+            display: inline-block;
+            width: var(--icon-size-md);
+            height: var(--icon-size-md);
+            stroke: currentColor;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+        .icon--sm { width: var(--icon-size-sm); height: var(--icon-size-sm); }
+        .icon--md { width: var(--icon-size-md); height: var(--icon-size-md); }
+        .icon--lg { width: var(--icon-size-lg); height: var(--icon-size-lg); }
+        .icon-wrap {
+            display: inline-flex;
+            align-items: center;
+            vertical-align: middle;
         }
 
         /* Skip link – prieinamumas (matomas tik su focus) */
@@ -75,7 +129,7 @@
             font-weight: 700;
             font-size: 16px;
             text-decoration: none;
-            border-radius: 0 0 10px 0;
+            border-radius: 0 0 var(--r-btn) 0;
             transition: left 0.2s ease;
         }
 
@@ -96,39 +150,40 @@
         .container {
             max-width: 960px;
             margin: 0 auto;
-            padding: 60px 28px;
+            padding: 60px var(--space-24);
         }
 
         /* ===== HEADER ===== */
         .header {
             position: relative;
-            /* Vertikalus gradientas: tamsesnis viršuje, šviesesnis apačioje – mažiau „reklaminė“, daugiau „produktas“ */
-            background: linear-gradient(180deg, var(--hero-gradient-start) 0%, var(--hero-gradient-mid) 50%, var(--hero-gradient-end) 100%);
+            /* Premium: radial šviesa centre + gradient + gylis */
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 20%, rgba(255, 255, 255, 0.14) 0%, transparent 50%),
+                linear-gradient(165deg, var(--hero-gradient-start) 0%, var(--hero-gradient-mid) 45%, var(--hero-gradient-end) 100%);
             color: white;
             padding: 46px 48px;
-            border-radius: 20px;
-            margin-bottom: 40px;
-            box-shadow: 0 20px 40px rgba(60, 72, 90, 0.22);
+            border-radius: var(--r-hero);
+            margin-bottom: var(--space-32);
+            box-shadow: var(--shadow-elevated);
             overflow: hidden;
         }
 
-        /* Subtilus tamsesnis overlay – tekstas aiškesnis */
+        /* Tamsesnis apatinis dešinys – depth hierarchy */
         .header::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.08);
+            background: radial-gradient(ellipse 100% 80% at 100% 100%, rgba(0, 0, 0, 0.16) 0%, transparent 55%);
             pointer-events: none;
             z-index: 0;
         }
 
-        /* Švelni noise tekstūra (~6%) – „minkštesnis“ fonas */
+        /* 2–3% grain – premium micro-texture */
         .header::after {
             content: '';
             position: absolute;
             inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            opacity: 0.06;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
             pointer-events: none;
             z-index: 0;
             mix-blend-mode: overlay;
@@ -148,41 +203,45 @@
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: var(--space-12);
+            margin-bottom: var(--space-24);
         }
 
+        /* Badge/Chip – brand komponentas (ne utilitarinis tag) */
         .badge {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); /* Safari palaikymas */
-            padding: 9px 18px;
-            border-radius: 8px;
-            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 10px 18px;
+            min-height: 40px;
+            border-radius: var(--r-badge);
+            font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.1em;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .badge:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .badge-spinoff {
-            border: 1px solid rgba(217, 164, 65, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
-        /* Promptų anatomija – mažesnis kontrastas ir padding, kad nekonkuruotų su hero */
         .header-badges a.badge {
             position: relative;
             z-index: 2;
-            display: inline-flex;
-            align-items: center;
-            min-height: 44px;
             min-width: 44px;
             color: inherit;
             text-decoration: none;
             cursor: pointer;
             background: rgba(255, 255, 255, 0.17);
-            padding: 6px 14px;
-            font-size: 13px;
         }
         .header-badges a.badge:hover,
         .header-badges a.badge:focus-visible {
@@ -195,7 +254,7 @@
             font-size: 52px;
             font-weight: 800;
             line-height: 1.1;
-            margin-bottom: 16px;
+            margin-bottom: var(--space-24);
             letter-spacing: -0.01em;
         }
 
@@ -204,49 +263,86 @@
             line-height: 1.5;
             opacity: 0.95;
             font-weight: 500;
+            margin-bottom: var(--space-12);
         }
-
 
         .header-note {
             font-size: 13px;
             opacity: 0.85;
-            margin-top: 16px;
+            margin-top: var(--space-16);
             font-weight: 500;
         }
 
+        /* Daugiau oro tarp H1 → sub → CTA */
         .header-cta {
-            margin-top: 22px;
+            margin-top: var(--space-32);
+            padding-top: var(--space-24);
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 16px;
+            gap: var(--space-16);
         }
 
+        /* CTA – primary (vienas ryškus kelias), secondary (ghost) */
         .cta-button {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: var(--space-12);
             background: var(--cta-bg);
             color: var(--cta-text);
-            padding: 20px 32px;
+            padding: 20px var(--space-32);
             min-height: 44px;
             min-width: 44px;
-            border-radius: 12px;
+            border-radius: var(--r-btn);
             border: none;
             font-size: 17px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
             text-decoration: none;
-            box-shadow: 0 4px 14px rgba(60, 72, 90, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
+            box-shadow: var(--shadow-card);
             outline: none;
+        }
+
+        /* Hero: pagrindinis CTA – solid white, power, premium, hover dinamika */
+        .header .header-cta .cta-button {
+            background: var(--cta-hero-bg);
+            color: var(--cta-hero-text);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            min-height: 56px;
+            padding: 28px 40px;
+            font-size: 18px;
+            font-weight: 800;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .header .header-cta .cta-button:hover {
+            background: var(--cta-hero-hover-bg);
+            color: var(--cta-hero-hover-text);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14), 0 4px 10px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
+        }
+
+        .header .header-cta .cta-button:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .header .header-cta .cta-button:focus-visible {
+            outline: 3px solid var(--white);
+            outline-offset: 2px;
         }
 
         .cta-button:hover {
             background: var(--cta-hover);
             transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(60, 72, 90, 0.35), 0 0 12px rgba(255, 255, 255, 0.08);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
         }
 
         .cta-button:focus-visible {
@@ -254,25 +350,52 @@
             outline-offset: 2px;
         }
 
+        /* Hero secondary – aiškiai silpnesnis už primary, glass */
+        .header .header-cta .cta-button-outline {
+            font-size: 15px;
+            font-weight: 600;
+            padding: 16px 24px;
+            min-height: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.9);
+            opacity: 0.95;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+        .header .header-cta .cta-button-outline:hover {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
+        }
+
         .cta-button-outline {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: var(--space-12);
             background: transparent;
             color: var(--white);
-            padding: 20px 32px;
+            padding: 20px var(--space-32);
             min-height: 44px;
             min-width: 44px;
-            border-radius: 12px;
-            border: 2px solid rgba(255, 255, 255, 0.9);
-            font-size: 17px;
-            font-weight: 700;
+            border-radius: var(--r-btn);
+            border: var(--border-width) solid rgba(255, 255, 255, 0.6);
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             text-decoration: none;
             outline: none;
-            opacity: 0.6;
+            opacity: 0.7;
+        }
+
+        .header .header-cta .cta-button-outline:hover,
+        .header .header-cta .cta-button-outline:focus-visible {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255, 255, 255, 0.55);
+            color: var(--white);
         }
 
         .cta-button-outline:hover,
@@ -286,6 +409,10 @@
         .cta-button-outline:focus-visible {
             outline: 3px solid var(--white);
             outline-offset: 2px;
+        }
+
+        .header .header-cta .cta-button-outline:active {
+            transform: translateY(0);
         }
 
         .cta-secondary {
@@ -326,8 +453,8 @@
 
         .modal {
             background: white;
-            border-radius: 20px;
-            padding: 40px;
+            border-radius: var(--r-card);
+            padding: var(--space-32);
             max-width: 500px;
             width: 100%;
             max-height: calc(100vh - 40px);
@@ -413,8 +540,8 @@
             width: 100%;
             padding: 14px 18px;
             min-height: 44px;
-            border: 3px solid var(--border);
-            border-radius: 10px;
+            border: var(--border-width) solid var(--border);
+            border-radius: var(--r-btn);
             font-size: 16px;
             font-family: 'Inter', sans-serif;
             transition: all 0.2s;
@@ -449,7 +576,7 @@
             background: var(--accent-dark);
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: var(--r-btn);
             font-size: 18px;
             font-weight: 700;
             cursor: pointer;
@@ -533,23 +660,24 @@
             line-height: 1.6;
         }
 
-        /* ===== INSTRUCTIONS BOX ===== */
+        /* ===== INSTRUCTIONS BOX – vizualinis svoris, sisteminis kbd ===== */
         .instructions {
-            background: var(--orange-light);
-            border: 3px solid var(--accent-gold);
-            border-radius: 16px;
-            padding: 36px 40px;
-            margin-bottom: 48px;
+            background: linear-gradient(180deg, var(--orange-light) 0%, #E8F5EE 100%);
+            border: 1px solid rgba(14, 122, 51, 0.25);
+            border-radius: var(--r-card);
+            padding: var(--space-28) var(--space-32);
+            margin-bottom: var(--space-32);
+            box-shadow: var(--shadow-medium), 0 1px 0 rgba(255, 255, 255, 0.6) inset;
         }
 
         .instructions-title {
             font-size: 24px;
             font-weight: 800;
             color: var(--accent-dark);
-            margin-bottom: 24px;
+            margin-bottom: var(--space-24);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: var(--space-12);
         }
 
         .instructions ol {
@@ -560,11 +688,11 @@
 
         .instructions li {
             font-size: 18px;
-            margin-bottom: 16px;
-            line-height: 1.7;
+            margin-bottom: var(--space-16);
+            line-height: 1.6;
             color: var(--text);
             position: relative;
-            padding-left: 12px;
+            padding-left: var(--space-12);
             counter-increment: item;
         }
 
@@ -577,35 +705,39 @@
             font-size: 20px;
         }
 
+        /* kbd/code – vienoda UI kalba (ne raw tag) */
         .instructions code {
-            background: white;
-            border: 2px solid var(--accent-gold);
-            padding: 4px 10px;
-            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(14, 122, 51, 0.2);
+            padding: 10px 18px;
+            min-height: 40px;
+            border-radius: var(--r-badge);
             font-family: 'JetBrains Mono', monospace;
-            font-size: 16px;
-            font-weight: 700;
+            font-size: 13px;
+            font-weight: 600;
             color: var(--accent-dark);
+            line-height: 1.4;
+            box-shadow: 0 1px 3px rgba(60, 72, 90, 0.08);
         }
 
-        /* ===== LEARNING OBJECTIVES (M1) ===== */
+        /* ===== LEARNING OBJECTIVES (M1) – elevation, premium ritmas ===== */
         .objectives {
-            background: var(--white);
-            border: 3px solid var(--accent-dark);
-            border-radius: 16px;
-            padding: 28px 36px;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            background: linear-gradient(180deg, var(--white) 0%, #FAFBFC 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--r-card);
+            padding: var(--space-28) var(--space-32);
+            margin-bottom: var(--space-32);
+            box-shadow: var(--shadow-medium), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
         }
 
         .objectives h2 {
             font-size: 22px;
             font-weight: 800;
             color: var(--accent-dark);
-            margin-bottom: 16px;
+            margin-bottom: var(--space-20);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: var(--space-12);
         }
 
         .objectives ul {
@@ -615,83 +747,142 @@
 
         .objectives li {
             position: relative;
-            padding-left: 28px;
-            margin-bottom: 10px;
+            padding-left: 44px;
+            margin-bottom: var(--space-20);
+            font-size: 17px;
+            line-height: 1.6;
+            color: var(--text);
+            transition: color 0.2s ease;
+        }
+
+        .objectives li:first-child {
+            font-weight: 600;
+            color: var(--accent-dark);
+        }
+
+        .objectives li:hover {
+            color: var(--accent-dark);
+        }
+
+        /* Checkmark – brand svoris, micro-depth, premium */
+        .objectives li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.15em;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, var(--green) 0%, var(--green-dark) 100%);
+            box-shadow: 0 2px 6px rgba(56, 161, 105, 0.4), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .objectives li::after {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0.1em;
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease;
+        }
+
+        .objectives li:hover::before {
+            box-shadow: 0 4px 10px rgba(56, 161, 105, 0.45);
+            transform: scale(1.05);
+        }
+
+        .objectives li:hover::after {
+            transform: translateX(2px);
+        }
+
+        .objectives-intro {
+            margin-bottom: var(--space-20);
             font-size: 17px;
             line-height: 1.6;
             color: var(--text);
         }
 
-        .objectives li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            font-weight: 800;
-            color: var(--green);
-            font-size: 18px;
-        }
-
+        /* Badge sistemos dalis – vienodas stilius su .badge */
         .prompt-time {
-            display: inline-block;
-            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            font-size: 12px;
             font-weight: 700;
             color: var(--text-light);
             background: var(--bg);
-            padding: 4px 10px;
-            border-radius: 6px;
-            margin-left: 8px;
+            padding: 10px 18px;
+            min-height: 40px;
+            border-radius: var(--r-badge);
+            margin-left: var(--space-12);
+            border: var(--border-width) solid var(--border-subtle);
         }
 
-        /* ===== PROMPT CARD ===== */
+        /* ===== PROMPT CARD (PromptCard) ===== */
         .prompt {
             background: var(--white);
-            border: 3px solid var(--border);
-            border-radius: 20px;
-            margin-bottom: 32px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: var(--r-card);
+            margin-bottom: var(--space-32);
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
+            box-shadow: var(--shadow-soft);
+            transition: box-shadow 0.25s ease, border-color 0.2s ease, transform 0.2s ease;
         }
 
         .prompt:hover {
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
-            transform: translateY(-1px);
+            box-shadow: var(--shadow-elevated);
+            border-color: var(--border-subtle-dark);
         }
 
         .prompt-header {
             background: linear-gradient(to right, var(--blue-light), var(--orange-light));
-            border-bottom: 3px solid var(--accent-dark);
-            padding: 32px 40px;
+            border-bottom: var(--border-width) solid var(--border-subtle-dark);
+            padding: var(--space-24) var(--space-32);
         }
 
         .prompt-meta {
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 20px;
+            gap: var(--space-16);
+            margin-bottom: var(--space-16);
         }
 
+        /* Badge sistemos dalis – skaičius kortelėje */
         .number {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            min-height: 40px;
             background: var(--accent-gold);
             color: var(--white);
-            border-radius: 12px;
+            border-radius: var(--r-badge);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 18px;
             font-weight: 800;
-            box-shadow: 0 4px 12px rgba(217, 164, 65, 0.35);
+            box-shadow: var(--shadow-card);
+            border: var(--border-width) solid rgba(255, 255, 255, 0.2);
         }
 
+        /* Badge sistemos dalis – kategorija */
         .category {
-            padding: 8px 16px;
+            padding: 10px 18px;
+            min-height: 40px;
+            display: inline-flex;
+            align-items: center;
             background: var(--tertiary-light);
             color: var(--tertiary-dark);
-            border: 2px solid var(--tertiary);
-            border-radius: 8px;
-            font-size: 14px;
+            border: var(--border-width) solid rgba(13, 148, 136, 0.35);
+            border-radius: var(--r-badge);
+            font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -699,7 +890,7 @@
 
         .prompt-title {
             font-size: 32px;
-            font-weight: 800;
+            font-weight: 700;
             color: var(--text);
             margin-bottom: 12px;
             line-height: 1.2;
@@ -709,21 +900,23 @@
             font-size: 19px;
             color: var(--text-light);
             line-height: 1.5;
-            font-weight: 500;
+            font-weight: 400;
         }
 
-        /* ===== PROMPT BODY ===== */
+        /* ===== PROMPT BODY + PromptCard (code-block) ===== */
         .prompt-body {
-            padding: 40px;
+            padding: var(--space-24) var(--space-32);
         }
 
+        /* PromptCard – code-style premium, left accent, enterprise feel */
         .code-block {
-            background: var(--bg);
-            border: 3px solid var(--accent-dark);
-            border-radius: 12px;
-            padding: 32px;
-            margin-top: 20px;
-            margin-bottom: 24px;
+            background: linear-gradient(to right, rgba(14, 122, 51, 0.04) 0%, var(--bg-subtle) 12px);
+            border: 1px solid var(--border-subtle-dark);
+            border-left: 2px solid var(--accent-primary);
+            border-radius: var(--r-btn);
+            padding: var(--space-24) var(--space-32);
+            margin-top: var(--space-16);
+            margin-bottom: var(--space-24);
             cursor: pointer;
             transition: all 0.2s;
             position: relative;
@@ -731,6 +924,7 @@
             min-height: 44px;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02), 0 2px 8px rgba(60, 72, 90, 0.05);
         }
 
         .code-block:focus-visible {
@@ -738,103 +932,148 @@
             outline-offset: 2px;
         }
 
-        .code-block::before {
-            content: '💡 Spausk čia ir nukopijuok';
+        /* Mini toolbar – Lucide ikona + tekstas */
+        .code-block-toolbar {
             position: absolute;
-            top: 12px;
-            right: 20px;
+            top: var(--space-12);
+            right: var(--space-16);
             z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             background: var(--accent-dark);
             color: white;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: var(--r-badge);
+            font-size: 12px;
             font-weight: 700;
             opacity: 0;
             transition: opacity 0.2s;
+            pointer-events: none;
         }
-
-        .code-block:hover::before,
-        .code-block:focus-visible::before {
+        .code-block-toolbar .icon {
+            color: white;
+        }
+        .code-block:hover .code-block-toolbar,
+        .code-block:focus-visible .code-block-toolbar {
             opacity: 1;
         }
 
         .code-block:hover {
             background: var(--orange-light);
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 0 4px rgba(217, 164, 65, 0.15);
+            border-color: rgba(14, 122, 51, 0.25);
+            box-shadow: var(--shadow-card-hover);
         }
 
         .code-block.selected {
             background: var(--orange-light);
-            border-color: var(--green);
-            box-shadow: 0 0 0 4px rgba(56, 161, 105, 0.2);
+            border-color: rgba(56, 161, 105, 0.4);
+            box-shadow: var(--shadow-card-hover);
         }
 
         .code-text {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 16px;
-            line-height: 2;
+            font-size: 15px;
+            line-height: 1.6;
             color: var(--text);
             white-space: pre-wrap;
             font-weight: 500;
         }
 
-        /* Info box – tertiarinė (teal) */
+        /* Info box – subtilus tint, small caps title, icon su circle */
         .info-box {
-            background: var(--tertiary-light);
-            border: 2px solid var(--tertiary);
-            border-radius: 12px;
-            padding: 24px 28px;
+            background: rgba(204, 251, 241, 0.4);
+            border: 1px solid rgba(13, 148, 136, 0.12);
+            border-radius: var(--r-btn);
+            padding: var(--space-24) var(--space-24);
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .info-item {
             display: flex;
             gap: 16px;
             align-items: flex-start;
         }
 
+        .info-item + .info-item {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(13, 148, 136, 0.15);
+        }
+
         .info-icon {
-            font-size: 28px;
-            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            min-height: 32px;
+            border-radius: 50%;
+            background: rgba(13, 148, 136, 0.15);
+        }
+        .info-icon .icon {
+            color: var(--tertiary-dark);
+        }
+
+        .info-item .info-content {
+            flex: 1;
+            min-width: 0;
         }
 
         .info-content strong {
             display: block;
-            font-size: 18px;
-            font-weight: 800;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
             color: var(--tertiary-dark);
             margin-bottom: 6px;
         }
 
         .info-content p {
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.6;
             color: var(--text);
+            font-weight: 400;
+        }
+
+        .info-item-replace .info-content {
+            font-size: 15px;
+        }
+
+        .info-item-replace .info-content strong {
+            font-size: 11px;
+            margin-bottom: 4px;
         }
 
         /* ===== BUTTON ===== */
         .prompt-footer {
-            padding: 32px 40px;
+            padding: var(--space-24) var(--space-32);
             background: var(--bg-subtle);
-            border-top: 3px solid var(--border);
+            border-top: var(--border-width) solid var(--border-subtle);
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             background: var(--cta-bg);
             color: white;
-            padding: 22px 36px;
+            padding: 20px var(--space-32);
             min-height: 44px;
             min-width: 44px;
-            border-radius: 12px;
+            border-radius: var(--r-btn);
             border: none;
             font-size: 18px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
             font-family: 'Inter', sans-serif;
-            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.35);
+            box-shadow: 0 4px 14px rgba(14, 122, 51, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
             outline: none;
         }
 
@@ -844,13 +1083,14 @@
         }
 
         .btn:hover {
-            background: var(--cta-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 16px rgba(234, 88, 12, 0.28);
+            background: linear-gradient(180deg, #0f8a3a 0%, var(--cta-hover) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 122, 51, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
         .btn:active {
-            transform: translateY(0);
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 2px 8px rgba(14, 122, 51, 0.2);
         }
 
         .btn.success {
@@ -893,11 +1133,12 @@
         /* ===== PROGRESS INDICATOR (S1) ===== */
         .progress-wrap {
             background: var(--orange-light);
-            border: 2px solid var(--accent-gold);
-            border-radius: 12px;
-            padding: 14px 20px;
-            margin-bottom: 24px;
+            border: var(--border-width) solid rgba(14, 122, 51, 0.2);
+            border-radius: var(--r-btn);
+            padding: var(--space-16) var(--space-24);
+            margin-bottom: var(--space-24);
             min-height: 44px;
+            box-shadow: var(--shadow-card);
         }
 
         .progress-wrap p {
@@ -925,11 +1166,11 @@
         /* ===== KAS TOLIAU (S2) ===== */
         .next-steps {
             background: var(--white);
-            border: 3px solid var(--tertiary);
-            border-radius: 16px;
-            padding: 28px 36px;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border: var(--border-width) solid rgba(13, 148, 136, 0.25);
+            border-radius: var(--r-card);
+            padding: var(--space-24) var(--space-32);
+            margin-bottom: var(--space-32);
+            box-shadow: var(--shadow-card);
         }
 
         .next-steps h2 {
@@ -961,7 +1202,7 @@
             background: var(--tertiary);
             color: white;
             text-decoration: none;
-            border-radius: 12px;
+            border-radius: var(--r-btn);
             font-weight: 700;
             font-size: 15px;
             transition: background 0.2s ease, color 0.2s ease;
@@ -979,13 +1220,13 @@
         /* ===== TOAST ===== */
         .toast {
             position: fixed;
-            bottom: 32px;
-            right: 32px;
+            bottom: var(--space-32);
+            right: var(--space-32);
             background: white;
-            border: 3px solid var(--green);
+            border: var(--border-width) solid rgba(56, 161, 105, 0.4);
             color: var(--text);
-            padding: 20px 32px;
-            border-radius: 12px;
+            padding: var(--space-24) var(--space-32);
+            border-radius: var(--r-btn);
             font-size: 18px;
             font-weight: 700;
             opacity: 0;
@@ -1012,19 +1253,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            font-weight: 800;
+        }
+        .toast-icon .icon {
+            color: white;
         }
 
         /* ===== BENDRUOMENĖ (puslapio pabaiga) ===== */
         .community {
-            margin-top: 48px;
-            padding: 32px 40px;
+            margin-top: var(--space-32);
+            padding: var(--space-24) var(--space-32);
             background: linear-gradient(to right, var(--blue-light), var(--orange-light));
-            border: 1px solid var(--border);
-            border-radius: 16px;
+            border: var(--border-width) solid var(--border-subtle);
+            border-radius: var(--r-card);
             text-align: center;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+            box-shadow: var(--shadow-card);
         }
 
         .community h2 {
@@ -1052,7 +1294,7 @@
             color: var(--white);
             padding: 20px 32px;
             min-height: 48px;
-            border-radius: 12px;
+            border-radius: var(--r-btn);
             font-size: 18px;
             font-weight: 600;
             text-decoration: none;
@@ -1078,7 +1320,7 @@
             margin-top: 16px;
             padding: 12px 20px;
             border: 2px solid var(--accent-dark);
-            border-radius: 12px;
+            border-radius: var(--r-btn);
             font-size: 16px;
             font-weight: 600;
             color: var(--accent-dark);
@@ -1100,13 +1342,13 @@
 
         /* ===== FOOTER ===== */
         .footer {
-            margin-top: 48px;
-            padding: 48px;
+            margin-top: var(--space-32);
+            padding: var(--space-32);
             background: white;
-            border: 3px solid var(--border);
-            border-radius: 20px;
+            border: var(--border-width) solid var(--border-subtle);
+            border-radius: var(--r-card);
             text-align: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow-card);
         }
 
         .footer h3 {
@@ -1146,19 +1388,22 @@
         }
 
         .tag {
-            padding: 10px 20px;
+            padding: 10px 18px;
+            min-height: 40px;
+            display: inline-flex;
+            align-items: center;
             background: var(--bg);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            font-size: 15px;
+            border: var(--border-width) solid var(--border-subtle);
+            border-radius: var(--r-badge);
+            font-size: 13px;
             font-weight: 700;
             color: var(--text-light);
         }
 
         .copyright {
-            margin-top: 32px;
-            padding-top: 24px;
-            border-top: 2px solid var(--border);
+            margin-top: var(--space-32);
+            padding-top: var(--space-24);
+            border-top: var(--border-width) solid var(--border-subtle);
         }
 
         .copyright p {
@@ -1213,7 +1458,7 @@
 
             .header {
                 padding: 40px 28px;
-                border-radius: 16px;
+                border-radius: var(--r-hero);
             }
 
             .header h1 {
@@ -1276,6 +1521,13 @@
                 max-width: 280px;
             }
 
+            .header .header-cta .cta-button,
+            .header .header-cta .cta-button-outline {
+                min-height: 54px;
+                padding-top: 26px;
+                padding-bottom: 26px;
+            }
+
             .community {
                 padding: 28px 20px;
             }
@@ -1305,8 +1557,8 @@
 
             .modal {
                 max-height: 90vh;
-                border-radius: 20px 20px 0 0;
-                padding: 24px 20px 32px;
+                border-radius: var(--r-card) var(--r-card) 0 0;
+                padding: var(--space-24) 20px var(--space-32);
             }
 
             .modal-close {
@@ -1431,31 +1683,32 @@
         <header class="header">
             <div class="header-badges">
                 <a href="https://ditreneris.github.io/anatomija/" class="badge" target="_blank" rel="noopener noreferrer" aria-label="Pilna Promptų anatomija – interaktyvus mokymas (atidaroma naujame lange)">Promptų anatomija</a>
-                <span class="badge badge-spinoff" role="status" aria-label="Mini rinkodaros AI sistema, Lead generator versija">Spin-off Nr. 2</span>
+                <span class="badge badge-spinoff" role="status" aria-label="HR kasdienė atrankos sistema, Spin-off Nr. 3">Spin-off Nr. 3</span>
             </div>
-            <h1>Turinio DI sistema<br>rinkodaros vadovams</h1>
-            <p>Per 45 min. susikursi turinio variklį, kuris dirba kasdien.</p>
+            <h1>DI atrankos sistema<br>Personalo vadovui</h1>
+            <p>Veikianti darbuotojų atrankos ir išlaikymo sistema vos per ~30 min.</p>
             <div class="header-cta">
-                <a href="#block1" class="cta-button" aria-label="Gauti nemokamai – pereiti prie promptų">Gauti nemokamai</a>
+                <a href="#block1" class="cta-button" aria-label="Pradėti – pereiti prie promptų">Pradėti</a>
                 <a href="#community" class="cta-button-outline" aria-label="Prisijunk prie bendruomenės – pereiti prie WhatsApp ir nuorodų">Prisijunk prie bendruomenės</a>
             </div>
         </header>
 
-        <!-- KĄ REALIAI GAUSI -->
+        <!-- KĄ ŠI SISTEMA PADEDA IŠSPRĘSTI -->
         <section class="objectives" aria-labelledby="objectives-title">
-            <h2 id="objectives-title"><span aria-hidden="true">🎯</span> Ką realiai gausi</h2>
+            <h2 id="objectives-title"><span class="icon-wrap" aria-hidden="true"><i data-lucide="target" class="icon icon--md"></i></span> Ką ši sistema padeda išspręsti</h2>
+            <p class="objectives-intro">Ji skirta tam, kad nustotumėte švaistyti laiką „tuščioms“ paieškoms!</p>
             <ul>
-                <li>Per 45 min. turėsi 4 paruoštus postus ir aiškią turinio sistemą</li>
-                <li>Generuosi turinį pagal 4 principus</li>
-                <li>Testuosi ir optimizuosi pagal aiškius KPI</li>
-                <li>Dirbsi uždaru ciklu: Planuok → Kurk → Platink → Matuok → Spręsk</li>
+                <li><strong>Nulinis srautas?</strong> Sugeneruokite pritraukiančius skelbimus ir paieškos žinutes.</li>
+                <li><strong>Netinkami žmonės?</strong> Tiksliai apibrėžkite profilį ir atsirinkite geriausius.</li>
+                <li><strong>Lėtas tempas?</strong> Identifikuokite „butelio kakliuką“ per 5 minutes.</li>
+                <li><strong>Prarandami talentai?</strong> Pateikite pasiūlymą, kurio neįmanoma atsisakyti.</li>
             </ul>
         </section>
 
-        <!-- INSTRUCTIONS (M4: laiko signalas) -->
+        <!-- INSTRUCTIONS -->
         <section class="instructions" aria-labelledby="instructions-title">
             <h2 class="instructions-title" id="instructions-title">
-                <span aria-hidden="true" role="img">📖</span>
+                <span class="icon-wrap" aria-hidden="true"><i data-lucide="book-open" class="icon icon--md"></i></span>
                 <span>Kaip naudoti šią biblioteką</span>
                 <span class="prompt-time" role="status" aria-label="Orientacinis laikas: 3–5 min per žingsnį">~3–5 min per žingsnį</span>
             </h2>
@@ -1463,7 +1716,7 @@
                 <li>Pasirink promptą ir spausk ant jo – tekstas pažymėsis</li>
                 <li>Spausk <strong>„Kopijuoti promptą“</strong> arba <code>Ctrl+C</code> / <code>Cmd+C</code></li>
                 <li>Įklijuok į ChatGPT, Claude ar kitą DI (dirbtinio intelekto) įrankį</li>
-                <li>Pakeisk <code>[auditorija]</code>, <code>[galvos skausmas]</code>, <code>[USP]</code>, <code>[kanalas]</code> ir kitus laukus savo duomenimis – ir gauk rezultatą</li>
+                <li>Jei prompte yra <code>[įmonė]</code>, <code>[pozicija]</code>, <code>[atlygis]</code>, <code>[ ]</code> ar kiti laukai – pakeisk savo duomenimis. DI vaidmuo („Tu esi…“) keisti nereikia.</li>
             </ol>
         </section>
 
@@ -1483,8 +1736,8 @@
                     <div class="category">Pradžia</div>
                     <span class="prompt-time">~5–10 min</span>
                 </div>
-                <h2 class="prompt-title">30 dienų turinio sistema</h2>
-                <p class="prompt-desc">Sukurk 30 dienų turinio planą pagal 4 turinio principus</p>
+                <h2 class="prompt-title">Kur stringame?</h2>
+                <p class="prompt-desc">Padėk suprasti, kur mūsų atrankoje problema</p>
             </div>
             <div class="prompt-body">
                 <div class="code-block" 
@@ -1494,17 +1747,37 @@
                      aria-label="Pasirinkti ir kopijuoti promptą 1"
                      onclick="selectText(this)"
                      onkeydown="handleCodeBlockKeydown(event, this)">
-                    <pre class="code-text" id="prompt1">META: Tu esi rinkodaros strategas. Tikslas: 30 dienų planas pagal 4 principus (Autoritetas, Problema, Pavyzdys, Pasiūlymas).
+                    <span class="code-block-toolbar" aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i> Kopijuoti</span>
+                    <pre class="code-text" id="prompt1">Tu esi atrankos analitikas. Tavo tikslas – pagal skaičius nustatyti, kur atrankoje stringame ir ką pakeisti.
 
-INPUT: Auditorija [ ], galvos skausmas [ ], USP [ ], kanalas [ ]. Kiekviena diena – viena iš 4 kolonų; matomi KPI.
+Padėk man suprasti, kur mūsų atrankoje problema.
 
-OUTPUT: Lentelė/sąrašas – 30 dienų: tema, hook, formatas, CTA, KPI. LT arba EN; konkretus tonas.</pre>
+Turime:
+- Kandidatų skaičius: [ ]
+- Pokalbių skaičius: [ ]
+- Pasiūlymų skaičius: [ ]
+- Kiek priėmė pasiūlymą: [ ]
+
+Pasakyk paprastai:
+1. Kur labiausiai stringame?
+2. Kodėl taip gali būti?
+3. Ką galime pakeisti jau šią savaitę?</pre>
                 </div>
                 <div class="info-box" role="note" aria-label="Informacija: promptas 1">
-                    <div class="info-icon" aria-hidden="true">💡</div>
-                    <div class="info-content">
-                        <strong>Branduolys:</strong>
-                        <p>4 principai = balansas: autoritetas, problema, įrodymas, pasiūlymas.</p>
+                    <div class="info-item">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="lightbulb" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Naudok kai:</strong>
+                            <p>Nori greitai suprasti, kur stringa atranka. Kai matome skaičius, lengviau nuspręsti, kur dėti pastangas.</p>
+                            <p><strong>Tai nėra klausimynas.</strong> Nukopijuok šį tekstą ir įklijuok į ChatGPT arba Claude.</p>
+                        </div>
+                    </div>
+                    <div class="info-item info-item-replace">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="pencil" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Pakeisk prieš naudodamas:</strong>
+                            <p>Skaičius (kandidatų, pokalbių, pasiūlymų, priėmė) – įrašyk savo skaičius į laukus [ ].</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1514,7 +1787,7 @@ OUTPUT: Lentelė/sąrašas – 30 dienų: tema, hook, formatas, CTA, KPI. LT arb
                         onclick="copyPrompt(this, 'prompt1')"
                         aria-label="Kopijuoti promptą 1 į mainų atmintinę"
                         data-prompt-id="prompt1">
-                    <span aria-hidden="true">📋</span>
+                    <span aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i></span>
                     <span>Kopijuoti promptą</span>
                 </button>
                 <label class="prompt-done-wrap">
@@ -1532,8 +1805,8 @@ OUTPUT: Lentelė/sąrašas – 30 dienų: tema, hook, formatas, CTA, KPI. LT arb
                     <div class="category">Pradžia</div>
                     <span class="prompt-time">~5–10 min</span>
                 </div>
-                <h2 class="prompt-title">Viena idėja → 7 formatai</h2>
-                <p class="prompt-desc">Vieną idėją paversk į 7 skirtingus formatus</p>
+                <h2 class="prompt-title">Koks žmogus mums iš tikrųjų tinka?</h2>
+                <p class="prompt-desc">Padėk aiškiai aprašyti idealų kandidatą pozicijai</p>
             </div>
             <div class="prompt-body">
                 <div class="code-block" 
@@ -1543,17 +1816,36 @@ OUTPUT: Lentelė/sąrašas – 30 dienų: tema, hook, formatas, CTA, KPI. LT arb
                      aria-label="Pasirinkti ir kopijuoti promptą 2"
                      onclick="selectText(this)"
                      onkeydown="handleCodeBlockKeydown(event, this)">
-                    <pre class="code-text" id="prompt2">META: Tu esi turinio strategas. Tikslas: 1 idėja → 7 formatų (ta pati žinutė, skirtingi kanalai).
+                    <span class="code-block-toolbar" aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i> Kopijuoti</span>
+                    <pre class="code-text" id="prompt2">Tu esi kandidatų profilio specialistas. Tavo tikslas – aiškiai aprašyti idealų kandidatą pozicijai (savybės, ko išmokyti, motyvacija).
 
-INPUT: Idėja [ ]. Ta pati branduolinė žinutė; pritaikyta kanalui.
+Padėk aiškiai aprašyti, koks žmogus mums labiausiai tiktų.
 
-OUTPUT: 7 blokai – LinkedIn, karuselė, 30s video, el. laiškas, titulinis ekranas, reklama, 3 įžūgiai. LT arba EN; konkretus tonas.</pre>
+Įmonė/sritis: [įmonė]
+Pozicija: [ ]
+Geriausias darbuotojas šioje rolėje: [koks jis?]
+Kodėl anksčiau žmonės išeidavo: [ ]
+
+Atsakyk paprastai:
+1. Kokias 5 savybes privalo turėti?
+2. Ko galima išmokyti?
+3. Kodėl toks žmogus svarstytų keisti darbą?
+4. Ko jis labiausiai bijotų?</pre>
                 </div>
                 <div class="info-box" role="note" aria-label="Informacija: promptas 2">
-                    <div class="info-icon" aria-hidden="true">💡</div>
-                    <div class="info-content">
-                        <strong>Vienos idėjos daug formatų:</strong>
-                        <p>1 idėja = 7 vienetų. Laikas sutaupomas, nuoseklumas išlaikomas.</p>
+                    <div class="info-item">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="lightbulb" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Naudok kai:</strong>
+                            <p>Aprašai idealų kandidatą pozicijai. Kai žinome, ko ieškome, lengviau atpažinti tinkamą žmogų.</p>
+                        </div>
+                    </div>
+                    <div class="info-item info-item-replace">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="pencil" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Pakeisk prieš naudodamas:</strong>
+                            <p>[įmonė] → įmonės pavadinimas arba sritis (pvz. IT startupas, mažmeninė prekyba); [pozicija] → pareigos; geriausias darbuotojas – trumpas aprašymas; kodėl išeidavo – priežastis arba „–“.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1563,7 +1855,7 @@ OUTPUT: 7 blokai – LinkedIn, karuselė, 30s video, el. laiškas, titulinis ekr
                         onclick="copyPrompt(this, 'prompt2')"
                         aria-label="Kopijuoti promptą 2 į mainų atmintinę"
                         data-prompt-id="prompt2">
-                    <span aria-hidden="true">📋</span>
+                    <span aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i></span>
                     <span>Kopijuoti promptą</span>
                 </button>
                 <label class="prompt-done-wrap">
@@ -1581,8 +1873,8 @@ OUTPUT: 7 blokai – LinkedIn, karuselė, 30s video, el. laiškas, titulinis ekr
                     <div class="category">Pradžia</div>
                     <span class="prompt-time">~3–5 min</span>
                 </div>
-                <h2 class="prompt-title">Linkedin Autoriteto Kūrimas</h2>
-                <p class="prompt-desc">150–200 žodžių postas su hook, 3 punktais, pavyzdžiu ir CTA</p>
+                <h2 class="prompt-title">Perrašyk darbo skelbimą paprastai</h2>
+                <p class="prompt-desc">Kad žmogus jaustų, jog skelbimas rašytas jam</p>
             </div>
             <div class="prompt-body">
                 <div class="code-block" 
@@ -1592,17 +1884,34 @@ OUTPUT: 7 blokai – LinkedIn, karuselė, 30s video, el. laiškas, titulinis ekr
                      aria-label="Pasirinkti ir kopijuoti promptą 3"
                      onclick="selectText(this)"
                      onkeydown="handleCodeBlockKeydown(event, this)">
-                    <pre class="code-text" id="prompt3">META: Tu esi LinkedIn/autoriteto specialistas. Tikslas: postas B2B skaitytojams su įrodymais.
+                    <span class="code-block-toolbar" aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i> Kopijuoti</span>
+                    <pre class="code-text" id="prompt3">Tu esi darbo skelbimų redaktorius. Tavo tikslas – perrašyti skelbimą paprasta kalba, kad kandidatas jaustų, jog rašoma būtent jam.
 
-INPUT: Tema [ ], pavyzdys/skaičius [ ]. 150–200 žodžių; be tuščių frazių.
+Perrašyk šį darbo skelbimą taip, kad žmogus jaustų, jog jis rašytas jam.
 
-OUTPUT: 1 postas – hook, 3 punktai, 1 pavyzdys, CTA. LT arba EN; įžūlus, pagrįstas.</pre>
+Įmonė/sritis: [įmonė]
+Tekstas: [įklijuok]
+
+Padaryk:
+- Aiški pradžia
+- Paprasta kalba
+- Konkretūs pavyzdžiai
+- Aiškus kvietimas kandidatuoti</pre>
                 </div>
                 <div class="info-box" role="note" aria-label="Informacija: promptas 3">
-                    <div class="info-icon" aria-hidden="true">💡</div>
-                    <div class="info-content">
-                        <strong>Autoritetas:</strong>
-                        <p>Įrodymai + konkretūs punktai = pasitikėjimas ir reakcija.</p>
+                    <div class="info-item">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="lightbulb" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Naudok kai:</strong>
+                            <p>Perrašai skelbimą paprasta kalba. Paprastas ir aiškus tekstas pritraukia tinkamus kandidatus.</p>
+                        </div>
+                    </div>
+                    <div class="info-item info-item-replace">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="pencil" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Pakeisk prieš naudodamas:</strong>
+                            <p>[įmonė] → įmonės pavadinimas arba sritis (nebūtina, bet padeda pritaikyti toną); [įklijuok] → įklijuok savo darbo skelbimo tekstą.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1612,7 +1921,7 @@ OUTPUT: 1 postas – hook, 3 punktai, 1 pavyzdys, CTA. LT arba EN; įžūlus, pa
                         onclick="copyPrompt(this, 'prompt3')"
                         aria-label="Kopijuoti promptą 3 į mainų atmintinę"
                         data-prompt-id="prompt3">
-                    <span aria-hidden="true">📋</span>
+                    <span aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i></span>
                     <span>Kopijuoti promptą</span>
                 </button>
                 <label class="prompt-done-wrap">
@@ -1627,11 +1936,11 @@ OUTPUT: 1 postas – hook, 3 punktai, 1 pavyzdys, CTA. LT arba EN; įžūlus, pa
             <div class="prompt-header">
                 <div class="prompt-meta">
                     <div class="number">4</div>
-                    <div class="category">Pradžia</div>
+                    <div class="category">Įgūdžiai</div>
                     <span class="prompt-time">~3–5 min</span>
                 </div>
-                <h2 class="prompt-title">30 sek. video scenarijus</h2>
-                <p class="prompt-desc">Sukurti video – lengviau dar nebuvo!</p>
+                <h2 class="prompt-title">Kaip šiandien rasti daugiau žmonių?</h2>
+                <p class="prompt-desc">3 paprasti būdai – LinkedIn, pažįstami, tiesioginis parašas</p>
             </div>
             <div class="prompt-body">
                 <div class="code-block" 
@@ -1641,27 +1950,43 @@ OUTPUT: 1 postas – hook, 3 punktai, 1 pavyzdys, CTA. LT arba EN; įžūlus, pa
                      aria-label="Pasirinkti ir kopijuoti promptą 4"
                      onclick="selectText(this)"
                      onkeydown="handleCodeBlockKeydown(event, this)">
-                    <pre class="code-text" id="prompt4">META: Tu esi video scenarijų autorius (Reels/TikTok/Shorts). Tikslas: 30 s scenarijus – sustabdyti žiūrovą, gauti reakciją.
+                    <span class="code-block-toolbar" aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i> Kopijuoti</span>
+                    <pre class="code-text" id="prompt4">Tu esi kandidatų paieškos konsultantas. Tavo tikslas – pasiūlyti konkrečius, paprastus būdus rasti daugiau kandidatų (LinkedIn, pažįstami, tiesioginis kontaktas).
 
-INPUT: Tema [ ], pavyzdys [ ]. ~30 s; hook 0–2 s – pirmos sekundės sprendžia.
+Duok man 3 paprastus būdus šiandien rasti daugiau kandidatų šiai pozicijai:
 
-OUTPUT: Laiko žymės – 0–2 s hook, 3 punktai (~8–10 s kiekvienam), pavyzdys, CTA. LT arba EN; greitas, aiškus.</pre>
+Įmonė/sritis: [įmonė]
+Pozicija: [ ]
+
+Pasiūlyk:
+- Ką parašyti LinkedIn
+- Kaip paklausti pažįstamų
+- Kaip parašyti žmogui tiesiogiai</pre>
                 </div>
                 <div class="info-box" role="note" aria-label="Informacija: promptas 4">
-                    <div class="info-icon" aria-hidden="true">💡</div>
-                    <div class="info-content">
-                        <strong>Trumpas formatas:</strong>
-                        <p>2 sekundės = liks arba slinks toliau. Įžūgis – esmė.</p>
+                    <div class="info-item">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="lightbulb" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Naudok kai:</strong>
+                            <p>Reikia daugiau kandidatų – LinkedIn, pažįstami, tiesioginis parašas. Paprasti žingsniai, ne tik skelbimai.</p>
+                        </div>
+                    </div>
+                    <div class="info-item info-item-replace">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="pencil" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Pakeisk prieš naudodamas:</strong>
+                            <p>[įmonė] → įmonės pavadinimas arba sritis; [pozicija] → tavo pozicija (pvz. Pardavimų vadovas).</p>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="prompt-footer">
-                <p class="prompt-cta">Nukopijuok, įklijuok į DI įrankį ir pakeisk [tema], [pavyzdys] savo duomenimis.</p>
+                <p class="prompt-cta">Nukopijuok, įklijuok į DI įrankį ir pakeisk [įmonė], [pozicija] savo duomenimis.</p>
                 <button class="btn" 
                         onclick="copyPrompt(this, 'prompt4')"
                         aria-label="Kopijuoti promptą 4 į mainų atmintinę"
                         data-prompt-id="prompt4">
-                    <span aria-hidden="true">📋</span>
+                    <span aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i></span>
                     <span>Kopijuoti promptą</span>
                 </button>
                 <label class="prompt-done-wrap">
@@ -1676,11 +2001,11 @@ OUTPUT: Laiko žymės – 0–2 s hook, 3 punktai (~8–10 s kiekvienam), pavyzd
             <div class="prompt-header">
                 <div class="prompt-meta">
                     <div class="number">5</div>
-                    <div class="category">Pradžia</div>
-                    <span class="prompt-time">~3–5 min</span>
+                    <div class="category">Įgūdžiai</div>
+                    <span class="prompt-time">~5–10 min</span>
                 </div>
-                <h2 class="prompt-title">Kasdienė analizė (Veikla→Sprendimas)</h2>
-                <p class="prompt-desc">Iš rodiklių suprask: kas neveikia, kodėl, ką daryti</p>
+                <h2 class="prompt-title">Kaip geriau pravesti pokalbį?</h2>
+                <p class="prompt-desc">Paprastas pokalbio planas – klausimai ir į ką atkreipti dėmesį</p>
             </div>
             <div class="prompt-body">
                 <div class="code-block" 
@@ -1690,17 +2015,34 @@ OUTPUT: Laiko žymės – 0–2 s hook, 3 punktai (~8–10 s kiekvienam), pavyzd
                      aria-label="Pasirinkti ir kopijuoti promptą 5"
                      onclick="selectText(this)"
                      onkeydown="handleCodeBlockKeydown(event, this)">
-                    <pre class="code-text" id="prompt5">META: Tu esi analitikas. Tikslas: iš rodiklių – veiksmų planas („ką daryti rytoj“).
+                    <span class="code-block-toolbar" aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i> Kopijuoti</span>
+                    <pre class="code-text" id="prompt5">Tu esi atrankos pokalbių specialistas. Tavo tikslas – sukurti paprastą pokalbio planą: klausimus, kurie padeda suprasti žmogų, ir į ką atkreipti dėmesį.
 
-INPUT: Rodikliai – skaičiai, kanalai, periodas [ ]. Kontekstas: ką bandėte, tikslai [ ]. Paremta duomenimis.
+Sukurk paprastą pokalbio planą šiai pozicijai:
 
-OUTPUT: 4 punktai – (1) Kas neveikia, (2) Priežastis (hipotezė), (3) Ką testuoti, (4) Ką stabdyti. LT arba EN; konkretus, veiksmo orientuotas.</pre>
+Įmonė/sritis: [įmonė]
+Pozicija: [ ]
+
+Duok:
+- 5 klausimus, kurie padeda suprasti žmogų
+- 3 situacinius klausimus
+- Kaip suprasti, ar žmogus tikrai tiks
+- Į ką atkreipti dėmesį</pre>
                 </div>
                 <div class="info-box" role="note" aria-label="Informacija: promptas 5">
-                    <div class="info-icon" aria-hidden="true">💡</div>
-                    <div class="info-content">
-                        <strong>Uždaras ciklas:</strong>
-                        <p>Rodikliai be veiksmų = stovėjimas vietoje. Duomenys → sprendimai.</p>
+                    <div class="info-item">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="lightbulb" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Naudok kai:</strong>
+                            <p>Ruoši pokalbį ar nori geresnių klausimų. Struktūra padeda išgirsti tai, kas iš tikrųjų svarbu.</p>
+                        </div>
+                    </div>
+                    <div class="info-item info-item-replace">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="pencil" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Pakeisk prieš naudodamas:</strong>
+                            <p>[įmonė] → įmonės pavadinimas arba sritis; [pozicija] → tavo pozicija.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1710,7 +2052,7 @@ OUTPUT: 4 punktai – (1) Kas neveikia, (2) Priežastis (hipotezė), (3) Ką tes
                         onclick="copyPrompt(this, 'prompt5')"
                         aria-label="Kopijuoti promptą 5 į mainų atmintinę"
                         data-prompt-id="prompt5">
-                    <span aria-hidden="true">📋</span>
+                    <span aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i></span>
                     <span>Kopijuoti promptą</span>
                 </button>
                 <label class="prompt-done-wrap">
@@ -1728,8 +2070,8 @@ OUTPUT: 4 punktai – (1) Kas neveikia, (2) Priežastis (hipotezė), (3) Ką tes
                     <div class="category">Įgūdžiai</div>
                     <span class="prompt-time">~5 min</span>
                 </div>
-                <h2 class="prompt-title">Prieštaravimų apdorojimo įrankis</h2>
-                <p class="prompt-desc">Iš klientų prieštaravimų sukurk turinį, kuris juos neutralizuoja</p>
+                <h2 class="prompt-title">Kodėl kandidatai atsisako?</h2>
+                <p class="prompt-desc">Suprask priežastis ir kaip apie tai kalbėti</p>
             </div>
             <div class="prompt-body">
                 <div class="code-block" 
@@ -1739,27 +2081,45 @@ OUTPUT: 4 punktai – (1) Kas neveikia, (2) Priežastis (hipotezė), (3) Ką tes
                      aria-label="Pasirinkti ir kopijuoti promptą 6"
                      onclick="selectText(this)"
                      onkeydown="handleCodeBlockKeydown(event, this)">
-                    <pre class="code-text" id="prompt6">META: Tu esi konversijos/turinio specialistas. Tikslas: turinys, neutralizuojantis prieštaravimus – mažesnė trintis, didesnis pasitikėjimas.
+                    <span class="code-block-toolbar" aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i> Kopijuoti</span>
+                    <pre class="code-text" id="prompt6">Tu esi pasiūlymų ir atsisakymų analitikas. Tavo tikslas – išaiškinti galimas atsisakymo priežastis ir pasiūlyti, kaip kalbėti su kandidatu bei ką pagerinti.
 
-INPUT: Prieštaravimų sąrašas [ ], produktas/pasiūlymas [ ]. Kiekvienas vienetas – vienas prieštaravimas; įtikinamai.
+Padėk suprasti, kodėl kandidatai gali atsisakyti mūsų pasiūlymo.
 
-OUTPUT: 10 vienetų – postai/el. laiškai/landing, prieštaravimas + argumentai. Trumpas aprašymas + žinutė. LT arba EN; įtikinamas, empatiškas.</pre>
+Įmonė/sritis: [įmonė]
+Pozicija: [ ]
+Atlygis: [ ]
+Ką siūlome: [ ]
+
+Duok:
+1. 3 galimas priežastis
+2. Kaip apie tai kalbėti su kandidatu
+3. Ką galėtume pagerinti</pre>
                 </div>
                 <div class="info-box" role="note" aria-label="Informacija: promptas 6">
-                    <div class="info-icon" aria-hidden="true">💡</div>
-                    <div class="info-content">
-                        <strong>Konversija:</strong>
-                        <p>Realūs klausimai + atsakymai = mažesnė trintis, didesnis pasitikėjimas.</p>
+                    <div class="info-item">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="lightbulb" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Naudok kai:</strong>
+                            <p>Kandidatai dažnai atsisako – nori suprasti kodėl. Supratus priežastis, galime koreguoti pasiūlymą arba komunikaciją.</p>
+                        </div>
+                    </div>
+                    <div class="info-item info-item-replace">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="pencil" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Pakeisk prieš naudodamas:</strong>
+                            <p>[įmonė], [pozicija], [atlygis], [ką siūlome] – įrašyk savo duomenis.</p>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="prompt-footer">
-                <p class="prompt-cta">Įklijuok į ChatGPT arba Claude – pakeisk prieštaravimus ir kontekstą.</p>
+                <p class="prompt-cta">Įklijuok į ChatGPT arba Claude – pakeisk įmonę, poziciją, atlygį ir ką siūlote.</p>
                 <button class="btn" 
                         onclick="copyPrompt(this, 'prompt6')"
                         aria-label="Kopijuoti promptą 6 į mainų atmintinę"
                         data-prompt-id="prompt6">
-                    <span aria-hidden="true">📋</span>
+                    <span aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i></span>
                     <span>Kopijuoti promptą</span>
                 </button>
                 <label class="prompt-done-wrap">
@@ -1775,10 +2135,10 @@ OUTPUT: 10 vienetų – postai/el. laiškai/landing, prieštaravimas + argumenta
                 <div class="prompt-meta">
                     <div class="number">7</div>
                     <div class="category">Įgūdžiai</div>
-                    <span class="prompt-time">~5–10 min</span>
+                    <span class="prompt-time">~5 min</span>
                 </div>
-                <h2 class="prompt-title">Lead generator postas + DM seka</h2>
-                <p class="prompt-desc">Lead generator postas + 4 žinučių seka</p>
+                <h2 class="prompt-title">Kaip geriau pristatyti pasiūlymą?</h2>
+                <p class="prompt-desc">Suformuluok pasiūlymą taip, kad žmogus jaustų vertę</p>
             </div>
             <div class="prompt-body">
                 <div class="code-block" 
@@ -1788,17 +2148,34 @@ OUTPUT: 10 vienetų – postai/el. laiškai/landing, prieštaravimas + argumenta
                      aria-label="Pasirinkti ir kopijuoti promptą 7"
                      onclick="selectText(this)"
                      onkeydown="handleCodeBlockKeydown(event, this)">
-                    <pre class="code-text" id="prompt7">META: Tu esi lead/konversijų specialistas. Tikslas: postas + 4 žinutės tiems, kurie augina lead'us ir nori vesti iš sekėjo į klientą.
+                    <span class="code-block-toolbar" aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i> Kopijuoti</span>
+                    <pre class="code-text" id="prompt7">Tu esi darbo pasiūlymų formuluotojas. Tavo tikslas – suformuluoti pasiūlymą trumpai ir aiškiai, pabrėžiant vertę ir laikantis draugiško, profesionalaus tono.
 
-INPUT: Lead generator [ kas duodama, ką sprendžia ] [ ], auditorija [ ]. Postas – vienas CTA; seka: pristatyti → kvalifikacija → vertė → pasiūlymas.
+Padėk suformuluoti darbo pasiūlymą taip, kad žmogus jaustų vertę.
 
-OUTPUT: (1) Postas: hook, nauda, CTA. (2) 4 žinutės (tekstas + CTA kiekvienai). LT arba EN; naudingas, aiškus tonas.</pre>
+Įmonė/sritis: [įmonė]
+Pozicija: [ ]
+Ką siūlome: [ ]
+
+Padaryk:
+- Trumpą ir aiškų tekstą
+- Pabrėžk svarbiausią naudą
+- Draugišką, bet profesionalų toną</pre>
                 </div>
                 <div class="info-box" role="note" aria-label="Informacija: promptas 7">
-                    <div class="info-icon" aria-hidden="true">💡</div>
-                    <div class="info-content">
-                        <strong>Potencialūs klientai:</strong>
-                        <p>Seka: sekėjas → klientas. Struktūra didina konversiją.</p>
+                    <div class="info-item">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="lightbulb" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Naudok kai:</strong>
+                            <p>Formuluoji pasiūlymą kandidatui. Kai žmogus mato vertę, lengviau priimti sprendimą.</p>
+                        </div>
+                    </div>
+                    <div class="info-item info-item-replace">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="pencil" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Pakeisk prieš naudodamas:</strong>
+                            <p>[įmonė], [pozicija], [ką siūlome] – įrašyk savo duomenis.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1808,7 +2185,7 @@ OUTPUT: (1) Postas: hook, nauda, CTA. (2) 4 žinutės (tekstas + CTA kiekvienai)
                         onclick="copyPrompt(this, 'prompt7')"
                         aria-label="Kopijuoti promptą 7 į mainų atmintinę"
                         data-prompt-id="prompt7">
-                    <span aria-hidden="true">📋</span>
+                    <span aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i></span>
                     <span>Kopijuoti promptą</span>
                 </button>
                 <label class="prompt-done-wrap">
@@ -1823,11 +2200,11 @@ OUTPUT: (1) Postas: hook, nauda, CTA. (2) 4 žinutės (tekstas + CTA kiekvienai)
             <div class="prompt-header">
                 <div class="prompt-meta">
                     <div class="number">8</div>
-                    <div class="category">Įgūdžiai</div>
+                    <div class="category">Plėtra</div>
                     <span class="prompt-time">~5–10 min</span>
                 </div>
-                <h2 class="prompt-title">Kliento istorijos struktūra</h2>
-                <p class="prompt-desc">Iš duomenų sukurk kliento istoriją</p>
+                <h2 class="prompt-title">Kaip padėti naujam žmogui pirmus 3 mėnesius?</h2>
+                <p class="prompt-desc">Paprastas 3 mėnesių planas – savaitė, mėnuo, 3 mėn., vadovo pagalba</p>
             </div>
             <div class="prompt-body">
                 <div class="code-block" 
@@ -1837,27 +2214,44 @@ OUTPUT: (1) Postas: hook, nauda, CTA. (2) 4 žinutės (tekstas + CTA kiekvienai)
                      aria-label="Pasirinkti ir kopijuoti promptą 8"
                      onclick="selectText(this)"
                      onkeydown="handleCodeBlockKeydown(event, this)">
-                    <pre class="code-text" id="prompt8">META: Tu esi turinio/pardavimų specialistas. Tikslas: iš duomenų – struktūrizuota kliento istorija (kredibilitetas, konversija).
+                    <span class="code-block-toolbar" aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i> Kopijuoti</span>
+                    <pre class="code-text" id="prompt8">Tu esi naujokų adaptacijos specialistas. Tavo tikslas – sukurti paprastą 3 mėnesių planą: ką suprasti pirmą savaitę, ko tikėtis po mėnesio ir 3 mėn., kaip vadovas gali padėti.
 
-INPUT: Klientas [ ], problema [ ], sprendimas [ ], procesas [ ], rezultatai (skaičiai/citatos) [ ]. Rezultatai – konkretūs.
+Sukurk paprastą 3 mėnesių planą naujam darbuotojui.
 
-OUTPUT: 6 sekcijos – Problema, Sprendimas, Procesas, Rezultatas, Pagrindinės mintys, CTA. Su skaičiais kur įmanoma. LT arba EN; įtikinamas tonas.</pre>
+Įmonė/sritis: [įmonė]
+Pozicija: [ ]
+
+Duok:
+- Ką jis turėtų suprasti pirmą savaitę
+- Ko iš jo tikimės po mėnesio
+- Ką turėtų mokėti po 3 mėnesių
+- Kaip vadovas gali padėti</pre>
                 </div>
                 <div class="info-box" role="note" aria-label="Informacija: promptas 8">
-                    <div class="info-icon" aria-hidden="true">💡</div>
-                    <div class="info-content">
-                        <strong>Įrodymai:</strong>
-                        <p>Skaičiai + procesas = kredibilitetas ir konversija.</p>
+                    <div class="info-item">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="lightbulb" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Naudok kai:</strong>
+                            <p>Planuoji naujo darbuotojo pirmus mėnesius. Aiškūs lūkesčiai ir pagalba mažina išeitį per bandymo laikotarpį.</p>
+                        </div>
+                    </div>
+                    <div class="info-item info-item-replace">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="pencil" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Pakeisk prieš naudodamas:</strong>
+                            <p>[įmonė] → įmonės pavadinimas arba sritis; [pozicija] → tavo pozicija.</p>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="prompt-footer">
-                <p class="prompt-cta">Nukopijuok ir įklijuok – įrašyk kliento duomenis ir gauk struktūrizuotą istoriją.</p>
+                <p class="prompt-cta">Nukopijuok ir įklijuok – įrašyk įmonę, poziciją ir gauk planą.</p>
                 <button class="btn" 
                         onclick="copyPrompt(this, 'prompt8')"
                         aria-label="Kopijuoti promptą 8 į mainų atmintinę"
                         data-prompt-id="prompt8">
-                    <span aria-hidden="true">📋</span>
+                    <span aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i></span>
                     <span>Kopijuoti promptą</span>
                 </button>
                 <label class="prompt-done-wrap">
@@ -1873,10 +2267,10 @@ OUTPUT: 6 sekcijos – Problema, Sprendimas, Procesas, Rezultatas, Pagrindinės 
                 <div class="prompt-meta">
                     <div class="number">9</div>
                     <div class="category">Plėtra</div>
-                    <span class="prompt-time">~3–5 min</span>
+                    <span class="prompt-time">~5 min</span>
                 </div>
-                <h2 class="prompt-title">Temų grupė</h2>
-                <p class="prompt-desc">Pagrindinė tema + 8 subtemos, vidinės nuorodos</p>
+                <h2 class="prompt-title">Kodėl žmonės išeina?</h2>
+                <p class="prompt-desc">Išanalizuok priežastis ir ką galime pakeisti greitai</p>
             </div>
             <div class="prompt-body">
                 <div class="code-block"
@@ -1886,17 +2280,32 @@ OUTPUT: 6 sekcijos – Problema, Sprendimas, Procesas, Rezultatas, Pagrindinės 
                      aria-label="Pasirinkti ir kopijuoti promptą 9"
                      onclick="selectText(this)"
                      onkeydown="handleCodeBlockKeydown(event, this)">
-                    <pre class="code-text" id="prompt9">META: Tu esi SEO/turinio specialistas. Tikslas: temų struktūra (pagrindinė + 8 subtemos) autoritetui ir organiniam pasiekiamumui.
+                    <span class="code-block-toolbar" aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i> Kopijuoti</span>
+                    <pre class="code-text" id="prompt9">Tu esi darbuotojų išlaikymo analitikas. Tavo tikslas – išanalizuoti išėjimų priežastis, neaiškumus ir lūkesčių neatitikimus, pasiūlyti greitus pakeitimus.
 
-INPUT: Pagrindinė tema [ ], niša/vertė [ ]. 8 subtemos, logiškai susietos; vidinės nuorodos.
+Padėk išanalizuoti, kodėl žmonės išeina per pirmus 6 mėnesius.
 
-OUTPUT: (1) 1 pagrindinė tema – pavadinimas, aprašymas, CTA. (2) 8 subtemos – pavadinimai, ryšys su pagrindine. (3) Nuorodų logika. LT arba EN.</pre>
+Priežastys, kurias girdėjome: [ ]
+
+Pasakyk:
+1. Kur galime būti neaiškūs?
+2. Kur lūkesčiai nesutampa?
+3. Ką galime pakeisti greitai?</pre>
                 </div>
                 <div class="info-box" role="note" aria-label="Informacija: promptas 9">
-                    <div class="info-icon" aria-hidden="true">💡</div>
-                    <div class="info-content">
-                        <strong>Autoritetas:</strong>
-                        <p>Pagrindinė tema + subtemos = pasiekiamumas ir eksperto pozicija.</p>
+                    <div class="info-item">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="lightbulb" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Naudok kai:</strong>
+                            <p>Žmonės išeina per pirmus mėnesius – nori suprasti kodėl. Supratus priežastis, galime veikti proaktyviai.</p>
+                        </div>
+                    </div>
+                    <div class="info-item info-item-replace">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="pencil" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Pakeisk prieš naudodamas:</strong>
+                            <p>[priežastys] – įrašyk, ką girdėjote, kodėl žmonės išeina (arba „dar nežinome“).</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1906,7 +2315,7 @@ OUTPUT: (1) 1 pagrindinė tema – pavadinimas, aprašymas, CTA. (2) 8 subtemos 
                         onclick="copyPrompt(this, 'prompt9')"
                         aria-label="Kopijuoti promptą 9 į mainų atmintinę"
                         data-prompt-id="prompt9">
-                    <span aria-hidden="true">📋</span>
+                    <span aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i></span>
                     <span>Kopijuoti promptą</span>
                 </button>
                 <label class="prompt-done-wrap">
@@ -1924,8 +2333,8 @@ OUTPUT: (1) 1 pagrindinė tema – pavadinimas, aprašymas, CTA. (2) 8 subtemos 
                     <div class="category">Viskas kartu</div>
                     <span class="prompt-time">~5–10 min</span>
                 </div>
-                <h2 class="prompt-title">Pagrindinis promptas (valdymo centras)</h2>
-                <p class="prompt-desc">Vienas integruotas planas: turinys, vienos idėjos daug formatų, testavimas, veiksmai</p>
+                <h2 class="prompt-title">Pagrindinis promptas (vienas viskam)</h2>
+                <p class="prompt-desc">Vienas integruotas atrankos planas – nuo problemos iki pirmų mėnesių</p>
             </div>
             <div class="prompt-body">
                 <div class="code-block"
@@ -1935,27 +2344,53 @@ OUTPUT: (1) 1 pagrindinė tema – pavadinimas, aprašymas, CTA. (2) 8 subtemos 
                      aria-label="Pasirinkti ir kopijuoti promptą 10"
                      onclick="selectText(this)"
                      onkeydown="handleCodeBlockKeydown(event, this)">
-                    <pre class="code-text" id="prompt10">META: Tu esi rinkodaros strategas. Tikslas: vienas „valdymo centro" planas – turinys, 1→7 formatų, testavimas, prioritetai.
+                    <span class="code-block-toolbar" aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i> Kopijuoti</span>
+                    <pre class="code-text" id="prompt10">Tu esi HR atrankos strategas. Tavo tikslas – vienoje vietoje sudėlioti visą atrankos planą: nuo problemos ir savaitės veiksmų iki skelbimo, pokalbių, sutikimo tikimybės ir pirmų 3 mėnesių palaikymo. Rašyk paprastai, tik konkrečiais veiksmais.
 
-INPUT: Verslas [ ], auditorija [ ], galvos skausmas [ ], USP [ ], tikslas [ ], kanalai [ ], duomenys (rodikliai, prieštaravimai, istorijos) [ ]. Konkretūs teiginiai, matuojamas CTA.
+Padėk man paprastai ir aiškiai sutvarkyti atranką šiai pozicijai:
 
-OUTPUT: 6 blokai – (1) 30 d. struktūra, (2) 5 turinio vienetai šiai savaitei, (3) 1 idėja→7 formatų, (4) 3 hipotezės, (5) Rodiklių interpretavimas, (6) 3 veiksmai rytoj. LT arba EN; konkretus tonas.</pre>
+Įmonė/sritis: [įmonė]
+Pozicija: [ ]
+Kiek žmonių kandidatuoja: [ ]
+Kur stringame: [ ]
+Ką jau bandėme: [ ]
+
+Duok:
+1. Kur problema
+2. Ką daryti šią savaitę
+3. Kaip pagerinti darbo skelbimą
+4. Kaip geriau vesti pokalbius
+5. Kaip padidinti tikimybę, kad žmogus sutiks
+6. Kaip padėti jam neišeiti per pirmus 3 mėnesius
+
+Rašyk paprastai.
+Duok tik konkrečius veiksmus.
+Be sudėtingų terminų.</pre>
                 </div>
                 <div class="info-box" role="note" aria-label="Informacija: promptas 10">
-                    <div class="info-icon" aria-hidden="true">💡</div>
-                    <div class="info-content">
-                        <strong>Valdymo centras:</strong>
-                        <p>Viskas vienoje vietoje: 30 d. planas, 1→7, testavimas, prioritetai.</p>
+                    <div class="info-item">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="lightbulb" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Naudok kai:</strong>
+                            <p>Norėtum vieną integruotą atrankos planą. Viskas vienoje vietoje: problema, savaitė, skelbimas, pokalbiai, sutikimas, pirmi mėnesiai.</p>
+                        </div>
+                    </div>
+                    <div class="info-item info-item-replace">
+                        <span class="info-icon" aria-hidden="true"><i data-lucide="pencil" class="icon icon--md"></i></span>
+                        <div class="info-content">
+                            <strong>Pakeisk prieš naudodamas:</strong>
+                            <p>[įmonė], [pozicija], kandidatų skaičius, kur stringame, ką bandėme – įrašyk savo duomenis.</p>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="prompt-footer">
-                <p class="prompt-cta">Šis promptas apima viską – nukopijuok, įklijuok ir pildyk savo verslo laukus.</p>
+                <p class="prompt-cta">Šis promptas apima viską – nukopijuok, įklijuok ir pildyk savo duomenimis.</p>
                 <button class="btn"
                         onclick="copyPrompt(this, 'prompt10')"
                         aria-label="Kopijuoti promptą 10 į mainų atmintinę"
                         data-prompt-id="prompt10">
-                    <span aria-hidden="true">📋</span>
+                    <span aria-hidden="true"><i data-lucide="copy" class="icon icon--sm"></i></span>
                     <span>Kopijuoti promptą</span>
                 </button>
                 <label class="prompt-done-wrap">
@@ -1970,16 +2405,16 @@ OUTPUT: 6 blokai – (1) 30 d. struktūra, (2) 5 turinio vienetai šiai savaitei
             <h2 id="next-steps-title">Kas toliau?</h2>
             <p>Geriausia eiti iš eilės nuo 1 iki 10. Paspaudę nuorodą pereisi prie atitinkamo prompto.</p>
             <div class="next-steps-links">
-                <a href="#block1">1. 30 dienų turinio sistema</a>
-                <a href="#block2">2. Viena idėja → 7 formatai</a>
-                <a href="#block3">3. Linkedin Autoriteto Kūrimas</a>
-                <a href="#block4">4. 30 sek. video scenarijus</a>
-                <a href="#block5">5. Kasdienė analizė (Veikla→Sprendimas)</a>
-                <a href="#block6">6. Prieštaravimų apdorojimas</a>
-                <a href="#block7">7. Lead generator postas + DM seka</a>
-                <a href="#block8">8. Kliento istorijos struktūra</a>
-                <a href="#block9">9. Temų grupė</a>
-                <a href="#block10">10. Pagrindinis promptas (valdymo centras)</a>
+                <a href="#block1">1. Kur stringame?</a>
+                <a href="#block2">2. Koks žmogus mums tinka?</a>
+                <a href="#block3">3. Perrašyk darbo skelbimą paprastai</a>
+                <a href="#block4">4. Kaip rasti daugiau žmonių?</a>
+                <a href="#block5">5. Kaip geriau pravesti pokalbį?</a>
+                <a href="#block6">6. Kodėl kandidatai atsisako?</a>
+                <a href="#block7">7. Kaip geriau pristatyti pasiūlymą?</a>
+                <a href="#block8">8. Kaip padėti naujam žmogui 3 mėn.?</a>
+                <a href="#block9">9. Kodėl žmonės išeina?</a>
+                <a href="#block10">10. Pagrindinis promptas (vienas viskam)</a>
             </div>
         </section>
 
@@ -1993,14 +2428,14 @@ OUTPUT: 6 blokai – (1) 30 d. struktūra, (2) 5 turinio vienetai šiai savaitei
         </section>
 
         <footer class="footer">
-            <h3>Sėkmės rinkodaroje <span aria-hidden="true">🚀</span></h3>
-            <p>Nepamiršk pakeisti <strong>[auditorija]</strong>, <strong>[galvos skausmas]</strong>, <strong>[USP]</strong>, <strong>[kanalas]</strong> ir kitus laukus savo duomenimis</p>
-            <p class="footer-product-link">Tai Spin-off Nr. 2 iš „Promptų anatomijos“. Pilnas interaktyvus mokymas ir kiti kursai: <a href="https://ditreneris.github.io/anatomija/" target="_blank" rel="noopener noreferrer">Promptų anatomija →</a></p>
+            <h3>Sėkmės atrankoje <span class="icon-wrap" aria-hidden="true"><i data-lucide="rocket" class="icon icon--md"></i></span></h3>
+            <p>Nepamiršk pakeisti <strong>[įmonė]</strong>, <strong>[pozicija]</strong>, <strong>[atlygis]</strong>, <strong>[kandidatų skaičius]</strong> ir kitus laukus savo duomenimis.</p>
+            <p class="footer-product-link">Tai Spin-off Nr. 3 iš „Promptų anatomijos“. Pilnas interaktyvus mokymas ir kiti kursai: <a href="https://ditreneris.github.io/anatomija/" target="_blank" rel="noopener noreferrer">Promptų anatomija →</a></p>
             <div class="tags" role="list">
-                <span class="tag" role="listitem"><span aria-hidden="true">📣</span> Rinkodara</span>
-                <span class="tag" role="listitem"><span aria-hidden="true">📚</span> 10 promptų</span>
-                <span class="tag" role="listitem"><span aria-hidden="true">⚡</span> Veiksmų fokusas</span>
-                <span class="tag" role="listitem"><span aria-hidden="true">🎯</span> Potencialūs klientai ir rodikliai</span>
+                <span class="tag" role="listitem"><span class="icon-wrap" aria-hidden="true"><i data-lucide="users" class="icon icon--sm"></i></span> HR atranka</span>
+                <span class="tag" role="listitem"><span class="icon-wrap" aria-hidden="true"><i data-lucide="book-marked" class="icon icon--sm"></i></span> 10 promptų</span>
+                <span class="tag" role="listitem"><span class="icon-wrap" aria-hidden="true"><i data-lucide="zap" class="icon icon--sm"></i></span> Veiksmų fokusas</span>
+                <span class="tag" role="listitem"><span class="icon-wrap" aria-hidden="true"><i data-lucide="target" class="icon icon--sm"></i></span> Kasdienės atrankos problemos</span>
             </div>
             <div class="copyright">
                 <p>&copy; 2026 Tomas Staniulis. Mokymų medžiaga. Visos teisės saugomos. <a href="privatumas.html">Privatumas</a></p>
@@ -2018,10 +2453,11 @@ OUTPUT: 6 blokai – (1) 30 d. struktūra, (2) 5 turinio vienetai šiai savaitei
          aria-live="polite" 
          aria-atomic="true"
          aria-label="Kopijavimo pranešimas">
-        <div class="toast-icon" aria-hidden="true">✓</div>
+        <div class="toast-icon" aria-hidden="true"><i data-lucide="check" class="icon icon--lg"></i></div>
         <span>Nukopijuota.</span>
     </div>
 
+    <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
     <script>
         (function() {
             'use strict';
@@ -2189,7 +2625,10 @@ OUTPUT: 6 blokai – (1) 30 d. struktūra, (2) 5 turinio vienetai šiai savaitei
                 if (!button) return;
 
                 const original = button.innerHTML;
-                button.innerHTML = '<span aria-hidden="true">✓</span><span>Nukopijuota!</span>';
+                button.innerHTML = '<span aria-hidden="true"><i data-lucide="check" class="icon icon--sm"></i></span><span>Nukopijuota!</span>';
+                if (window.lucide && typeof window.lucide.createIcons === 'function') {
+                    window.lucide.createIcons({ root: button });
+                }
                 button.classList.add('success');
                 button.setAttribute('aria-label', 'Promptas sėkmingai nukopijuotas');
                 showToast();
@@ -2212,7 +2651,10 @@ OUTPUT: 6 blokai – (1) 30 d. struktūra, (2) 5 turinio vienetai šiai savaitei
 
                 const original = button.innerHTML;
                 const errorMessage = message || 'Pažymėk tekstą';
-                button.innerHTML = `<span aria-hidden="true">⚠</span><span>${errorMessage}</span>`;
+                button.innerHTML = `<span aria-hidden="true"><i data-lucide="alert-triangle" class="icon icon--sm"></i></span><span>${errorMessage}</span>`;
+                if (window.lucide && typeof window.lucide.createIcons === 'function') {
+                    window.lucide.createIcons({ root: button });
+                }
                 button.setAttribute('aria-label', `Klaida: ${errorMessage}`);
                 
                 setTimeout(() => {
@@ -2310,6 +2752,11 @@ OUTPUT: 6 blokai – (1) 30 d. struktūra, (2) 5 turinio vienetai šiai savaitei
 
             // ===== INICIALIZACIJA =====
             document.addEventListener('DOMContentLoaded', function() {
+                // Lucide ikonų inicializacija (data-lucide → SVG)
+                if (window.lucide && typeof window.lucide.createIcons === 'function') {
+                    window.lucide.createIcons();
+                }
+
                 // Pridėti klaviatūros navigaciją visiems code-block elementams
                 const codeBlocks = document.querySelectorAll('.code-block');
                 codeBlocks.forEach(block => {
