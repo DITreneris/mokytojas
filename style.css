@@ -388,6 +388,7 @@ body {
     height: 22px;
     border-radius: 50%;
     background: #E2D0FF;
+    color: #565F6E;
     font-size: 12px;
     font-weight: 800;
 }
@@ -806,10 +807,10 @@ body {
 .field-help {
     font-size: 12px;
     font-weight: 500;
-    color: var(--text-light);
+    color: #5F697E;
     margin-top: 6px;
     line-height: 1.4;
-    opacity: 0.85;
+    opacity: 1;
 }
 
 .field-select {
@@ -1193,7 +1194,7 @@ body {
 
 .sessions-empty {
     font-size: 13px;
-    color: #7A8496;
+    color: #2F3746;
     text-align: center;
     padding: var(--space-16) var(--space-12);
     font-style: normal;
