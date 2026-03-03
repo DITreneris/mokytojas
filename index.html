@@ -21,10 +21,10 @@
                 <span class="top-nav-brand-text-short" aria-hidden="true">DI OC</span>
             </a>
             <div class="top-nav-actions">
-                <button type="button" class="top-nav-icon-btn" id="themeToggleBtn" aria-label="Perjungti tamsu rezima">
+                <button type="button" class="top-nav-icon-btn" id="themeToggleBtn" aria-label="Perjungti tamsų režimą">
                     <i data-lucide="moon" class="icon icon--sm"></i>
                 </button>
-                <button type="button" class="top-nav-copy-btn" id="stickyCopyBtn">Kopijuoti promptą</button>
+                <button type="button" class="top-nav-copy-btn" id="stickyCopyBtn">Kopijuoti užklausą</button>
             </div>
         </div>
     </nav>
@@ -39,7 +39,7 @@
                 <span class="badge badge-spinoff" role="status" aria-label="DI Operacinis Centras, Spin-off Nr. 5">Spin-off Nr. 5</span>
             </div>
             <h1>DI Operacinis Centras</h1>
-            <p>Per 5 min. gauk aiškius savaitės prioritetus ir veiksmus.<br>Įvesk skaičius ir išsisaugok TOP CEO lygmens užklausą.</p>
+            <p>Per 5 min. gauk aiškius savaitės prioritetus ir veiksmus.<br>Įvesk skaičius ir išsisaugok CEO lygio DI užklausą.</p>
             <ul class="header-steps" aria-label="Darbo žingsniai">
                 <li><a href="#operationsCenter" class="header-step is-active"><span class="header-step-num">1</span> Režimas</a></li>
                 <li><a href="#operationsCenter" class="header-step"><span class="header-step-num">2</span> Forma</a></li>
@@ -47,9 +47,9 @@
                 <li><a href="#library" class="header-step"><span class="header-step-num">4</span> Biblioteka</a></li>
             </ul>
             <div class="header-cta">
-                <a href="#operationsCenter" class="cta-button" aria-label="Gauti TOP savaitės prioritetus operaciniame centre">Gauti TOP prioritetus</a>
-                <a href="#library" class="cta-button-outline" aria-label="Peržiūrėti paruoštus šablonus">Arba rinktis šabloną ↓</a>
-                <p class="header-cta-meta">Užtruks iki 5 min. • Rezultatas - aiškūs savaitės prioritetai.</p>
+                <a href="#operationsCenter" class="cta-button" aria-label="Gauti savaitės prioritetus operaciniame centre">Gauti savaitės prioritetus</a>
+                <a href="#library" class="cta-button-outline" aria-label="Peržiūrėti paruoštus šablonus">Rinktis šabloną ↓</a>
+                <p class="header-cta-meta">Užtruksi iki 5 min. • Rezultatas: aiškūs savaitės prioritetai.</p>
             </div>
         </header>
 
@@ -59,7 +59,7 @@
                 <span class="step-badge" aria-hidden="true">1</span>
                 <div class="ops-center-header-text">
                     <span class="collapsible-title">Operacinis centras</span>
-                    <span class="collapsible-value">Pasirink režimą, užpildyk laukus – DI promptas generuojamas automatiškai</span>
+                    <span class="collapsible-value">Pasirink režimą, užpildyk laukus – DI užklausa sugeneruojama automatiškai</span>
                 </div>
             </div>
 
@@ -81,7 +81,7 @@
 
             <!-- Depth Selector -->
             <div class="depth-bar">
-                <span class="depth-label"><i data-lucide="sliders-horizontal" class="icon icon--sm"></i> Gylis</span>
+                <span class="depth-label"><i data-lucide="sliders-horizontal" class="icon icon--sm"></i> Analizės gylis</span>
                 <div class="depth-options" role="radiogroup" aria-label="Promptų gylio lygis">
                     <button type="button" class="depth-btn is-active" role="radio" aria-checked="true" data-depth="GREITA">
                         <i data-lucide="zap" class="icon icon--sm"></i> Greita
@@ -93,7 +93,7 @@
                         <i data-lucide="briefcase" class="icon icon--sm"></i> Valdybai
                     </button>
                 </div>
-                <div class="field-help">Nežinai nuo ko pradėti? Rinkis „Greita“.</div>
+                <div class="field-help">Nežinai, nuo ko pradėti? Rinkis „Greita“.</div>
             </div>
 
             <!-- Layout: Form + Output -->
@@ -224,11 +224,11 @@
 
                 <!-- OUTPUT SIDEBAR -->
                 <div class="ops-sidebar">
-                    <div class="ops-output" role="region" aria-label="Sugeneruotas DI promptas">
+                    <div class="ops-output" role="region" aria-label="Sugeneruota DI užklausa">
                         <div class="ops-output-header">
                             <div class="ops-output-badge">
                                 <span class="pulse"></span>
-                                <span>Sugeneruotas promptas</span>
+                                <span>Sugeneruota užklausa</span>
                             </div>
                             <span class="ops-output-depth" id="depthBadge">Greita</span>
                             <button class="ops-output-copy" id="outputCopyBtn" aria-label="Kopijuoti sugeneruotą promptą">
@@ -236,17 +236,17 @@
                             </button>
                         </div>
                         <div class="ops-output-text" id="opsOutput" aria-live="polite">
-                            Pasirink režimą ir užpildyk bent pagrindinius laukus - promptas sugeneruojamas automatiškai.
+                            Pasirink režimą ir užpildyk bent pagrindinius laukus – užklausa sugeneruojama automatiškai.
                         </div>
                         <div class="ops-output-footer">
                             <p class="ops-output-chars">Simbolių: <strong id="outputCharCount">0</strong></p>
-                            <p>Nukopijuok promptą, įklijuok į ChatGPT arba Claude ir paleisk analizę.</p>
-                            <button class="ops-output-cta" id="outputCopyCta" aria-label="Kopijuoti promptą">
-                                <span>KOPIJUOTI PROMPTĄ IR ANALIZUOTI</span>
+                            <p>Nukopijuok užklausą, įklijuok į ChatGPT arba Claude ir paleisk analizę.</p>
+                            <button class="ops-output-cta" id="outputCopyCta" aria-label="Kopijuoti užklausą">
+                                <span>KOPIJUOTI UŽKLAUSĄ IR ANALIZUOTI</span>
                                 <i data-lucide="arrow-right" class="icon icon--md"></i>
                             </button>
                             <div class="ops-tool-launchers" role="group" aria-label="DI įrankių pasirinkimas">
-                                <p class="ops-tool-launchers-label">Nori naršyti toliau? Pasirink įrankį:</p>
+                                <p class="ops-tool-launchers-label">Nori tęsti analizę? Pasirink įrankį:</p>
                                 <div class="ops-tool-launchers-list" role="group" aria-label="Atidaryti DI įrankį">
                                     <button type="button" class="ops-tool-btn" data-ai-tool="chatgpt" aria-label="Atidaryti ChatGPT naujame lange">
                                         Atidaryti ChatGPT
@@ -278,7 +278,10 @@
                             </div>
                         </div>
                         <ul class="session-list" id="sessionList" aria-label="Išsaugotos sesijos">
-                            <li class="sessions-empty" id="sessionsEmpty">Nėra išsaugotų sesijų</li>
+                            <li class="sessions-empty" id="sessionsEmpty">
+                                <span class="sessions-empty-icon" aria-hidden="true"><i data-lucide="sparkles" class="icon icon--sm"></i></span>
+                                Sesijų dar nėra. Sukurk pirmą analizę.
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -291,8 +294,8 @@
                 <button class="collapsible-toggle" id="libraryToggle" type="button" aria-expanded="false" aria-controls="libraryBody">
                     <span class="step-badge" aria-hidden="true">4</span>
                     <span class="collapsible-title">Šablonų biblioteka</span>
-                    <span class="collapsible-value">Paruošti promptų šablonai – taikyti formoje arba kopijuoti</span>
-                    <span class="collapsible-count">5 šablonai</span>
+                    <span class="collapsible-value">Paruošti užklausų šablonai – taikyk formoje arba kopijuok</span>
+                    <span class="collapsible-count" id="libraryTemplateCount">6 šablonai</span>
                     <span class="collapsible-chevron" aria-hidden="true">▾</span>
                 </button>
             </h2>

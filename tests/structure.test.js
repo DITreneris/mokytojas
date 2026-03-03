@@ -96,8 +96,8 @@ function run() {
   if (assert(html.includes('id="rulesList"'), 'Taisyklių sąrašas egzistuoja')) passed++;
   else failed++;
 
-  // --- Kopijuoti promptą ---
-  if (assert(html.includes('Kopijuoti prompt'), 'Kopijuoti promptą mygtukas egzistuoja')) passed++;
+  // --- Kopijavimo mygtukas ---
+  if (assert(html.includes('Kopijuoti užklaus') || html.includes('Kopijuoti prompt'), 'Kopijavimo mygtukas egzistuoja')) passed++;
   else failed++;
 
   // --- Prieinamumas / semantika ---

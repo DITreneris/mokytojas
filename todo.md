@@ -2,5 +2,5 @@
 
 - [ ] Paleisti `npm test` ir sutvarkyti kritines klaidas.
 - [ ] Patikrinti kopijavimo srautą (`sticky`, `output`, šablonai).
-- [ ] Sutvarkyti dark mode kontrastą ir `focus-visible`.
+- [x] Atnaujinti UI „Golden Standard“ (violetinė brand kryptis + white/dark premium taisyklės).
 - [ ] Paruošti push į `github.com/DITreneris/ceo`.

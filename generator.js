@@ -3,6 +3,7 @@
 
     var APP_ID = 'di_ops_center';
     var MAX_SESSIONS = 5;
+    var TEMPLATE_CHAR_LIMIT = 1100;
     var THEME_KEY = APP_ID + '_theme';
     var DEPTH_KEY = APP_ID + '_depth';
     var SESSIONS_KEY = APP_ID + '_sessions';
@@ -43,17 +44,17 @@
     var DEPTH_LEVELS = {
         GREITA: {
             label: 'Greita',
-            instruction: 'Atsakyk trumpai ir konkrečiai. Maksimum 3 punktai, kiekvienas 1–2 sakiniai. Be įžangų.',
+            instruction: 'Atsakyk trumpai ir aiškiai: daugiausia 3 punktai, kiekvienas po 1-2 sakinius, be įžangos.',
             format: '3 prioritetai + 3 veiksmai + 1 rizika'
         },
         GILU: {
             label: 'Gilu',
-            instruction: 'Pateik detalią analizę su kontekstu ir pagrindimais. Kiekvienam punktui – kodėl svarbu ir koks poveikis. Naudok skaičius.',
+            instruction: 'Pateik išsamią analizę su kontekstu ir pagrindimu. Kiekvienam punktui nurodyk, kodėl svarbu ir koks poveikis. Remkis skaičiais.',
             format: '3 prioritetai (su naudos pagrindimu) + 5 veiksmai (su terminais) + 2 rizikos (su mažinimo planais) + 1 ilgalaikė rekomendacija'
         },
         BOARD: {
             label: 'Valdybai',
-            instruction: 'Parengk ataskaitą valdybos lygiui. Tik faktai ir skaičiai, be nuomonių. Struktūra: Santrauka -> Finansai -> Veiksmai -> Rizikos. Formali kalba.',
+            instruction: 'Parenk valdybos lygio santrauką. Tik faktai ir skaičiai, be nuomonių. Struktūra: Santrauka -> Finansai -> Veiksmai -> Rizikos. Kalba formali.',
             format: 'Santrauka (3 sakiniai) + Finansinė padėtis (lentelė) + TOP 3 prioritetai + 5 veiksmai su rodikliais + Rizikų matrica + Rekomendacija valdybai'
         }
     };
@@ -64,47 +65,74 @@
             title: 'Vieneto ekonomika',
             desc: 'Vieneto ekonomikos analizė',
             icon: 'calculator',
-            prompt: 'Esi finansų analitikas. Mano verslo duomenys:\n- Vidutinės pajamos iš kliento (ARPU): [suma]\n- Kliento pritraukimo kaina (CAC): [suma]\n- Kliento gyvavimo vertė (LTV): [suma]\n- Bendroji marža: [%]\n\nAtlik vieneto ekonomikos analizę:\n1. LTV/CAC santykis ir vertinimas\n2. Atsipirkimo laikotarpis\n3. Kur didžiausias svertų potencialas (ARPU didinti, CAC mažinti, išlaikymą gerinti)\n4. 3 konkretūs veiksmai gerinti vieneto ekonomiką'
+            prompt: 'Esi finansų analitikas. Mano verslo duomenys:\n- Vidutinės pajamos iš kliento (ARPU): [suma]\n- Kliento pritraukimo kaina (CAC): [suma]\n- Kliento gyvavimo vertė (LTV): [suma]\n- Bendroji marža: [%]\n\nAtlik vieneto ekonomikos analizę:\n1. Įvertink LTV/CAC santykį\n2. Nustatyk atsipirkimo laikotarpį\n3. Įvardyk didžiausius svertus (ARPU didinimas, CAC mažinimas, išlaikymo gerinimas)\n4. Pasiūlyk 3 konkrečius veiksmus'
         },
         {
             id: 'augimo_svertai',
             title: 'Augimo svertai',
             desc: 'Augimo galimybių identifikavimas',
             icon: 'trending-up',
-            prompt: 'Esi augimo strategas. Mano verslo situacija:\n- Dabartinės mėnesio pajamos: [suma]\n- Tikslas per [laikotarpis]: [suma]\n- Dabartiniai kanalai: [kanalai]\n- Konversijos rodiklis: [%]\n\nIdentifikuok augimo svertus:\n1. TOP 3 svertai su didžiausiu naudos potencialu\n2. Kiekvienam svertui: kas, kiek, per kiek laiko\n3. Greiti laimėjimai (iki 2 savaičių)\n4. Rizikos ir priklausomybės'
+            prompt: 'Esi augimo strategas. Mano verslo situacija:\n- Dabartinės mėnesio pajamos: [suma]\n- Tikslas per [laikotarpis]: [suma]\n- Dabartiniai kanalai: [kanalai]\n- Konversijos rodiklis: [%]\n\nNustatyk augimo svertus:\n1. TOP 3 svertai su didžiausiu naudos potencialu\n2. Kiekvienam svertui nurodyk: ką darome, kokį poveikį tikimės gauti ir per kiek laiko\n3. Greitos pergalės (iki 2 savaičių)\n4. Pagrindinės rizikos ir priklausomybės'
         },
         {
             id: 'cash_runway',
             title: 'Pinigų rezervas',
             desc: 'Pinigų srauto analizė ir planavimas',
             icon: 'wallet',
-            prompt: 'Esi finansų konsultantas. Mano situacija:\n- Grynųjų likutis: [suma]\n- Mėnesio pajamos: [suma]\n- Mėnesio išlaidos: [suma]\n- Išlaidų tempo tendencija: [didėja/mažėja/stabili]\n\nAtlik pinigų rezervo analizę:\n1. Dabartinis veikimo rezervas mėnesiais\n2. Scenarijų analizė: optimistinis / bazinis / pesimistinis\n3. Pinigų srauto gerinimo veiksmai (per 30/60/90 dienų)\n4. Raudonos zonos indikatoriai - kada reikia veikti'
+            prompt: 'Esi finansų konsultantas. Mano situacija:\n- Grynųjų likutis: [suma]\n- Mėnesio pajamos: [suma]\n- Mėnesio išlaidos: [suma]\n- Išlaidų tempo tendencija: [didėja/mažėja/stabili]\n\nAtlik pinigų rezervo analizę:\n1. Įvertink dabartinį veikimo rezervą mėnesiais\n2. Pateik scenarijus: optimistinis / bazinis / pesimistinis\n3. Pasiūlyk pinigų srauto gerinimo veiksmus (30/60/90 dienų)\n4. Įvardyk raudonos zonos rodiklius - kada reikia veikti'
         },
         {
             id: 'kainodara',
             title: 'Kainodara',
             desc: 'Kainodaros strategijos optimizavimas',
             icon: 'tag',
-            prompt: 'Esi kainodaros ekspertas. Mano produktas/paslauga:\n- Dabartinė kaina: [kaina]\n- Konkurentų kainų diapazonas: [nuo-iki]\n- Bendroji marža: [%]\n- Klientų tipai: [segmentai]\n\nPateik kainodaros rekomendacijas:\n1. Dabartinės kainos vertinimas palyginus su rinka\n2. Vertės argumentacija pagal naudą klientui\n3. Kelių planų kainodaros galimybės\n4. Kainos testavimo planas'
+            prompt: 'Esi kainodaros ekspertas. Mano produktas/paslauga:\n- Dabartinė kaina: [kaina]\n- Konkurentų kainų diapazonas: [nuo-iki]\n- Bendroji marža: [%]\n- Klientų tipai: [segmentai]\n\nPateik kainodaros rekomendacijas:\n1. Įvertink dabartinę kainą rinkos kontekste\n2. Pagrįsk vertę per kliento gaunamą naudą\n3. Pasiūlyk kelių planų kainodaros variantus\n4. Parenk kainos testavimo planą'
         },
         {
             id: 'riziku_valdymas',
             title: 'Rizikų valdymas',
             desc: 'Pagrindinių rizikų identifikavimas',
             icon: 'shield-alert',
-            prompt: 'Esi rizikų valdymo specialistas. Mano verslo kontekstas:\n- Sritis: [sritis]\n- Komandos dydis: [žmonės]\n- Pagrindiniai klientai: [kiek, koncentracija]\n- Pajamų šaltiniai: [šaltiniai]\n\nAtlik rizikų auditą:\n1. TOP 5 rizikos (tikimybė x poveikis)\n2. Kiekvienai rizikai: prevencija ir mažinimo planas\n3. Ankstyvieji įspėjamieji rodikliai\n4. Veiksmų planas, jei rizika realizuojasi'
+            prompt: 'Esi rizikų valdymo specialistas. Mano verslo kontekstas:\n- Sritis: [sritis]\n- Komandos dydis: [žmonės]\n- Pagrindiniai klientai: [kiek, koncentracija]\n- Pajamų šaltiniai: [šaltiniai]\n\nAtlik rizikų auditą:\n1. Išskirk TOP 5 rizikas (tikimybė x poveikis)\n2. Kiekvienai rizikai pateik prevencijos ir mažinimo planą\n3. Įvardyk ankstyvuosius įspėjamuosius rodiklius\n4. Parenk veiksmų planą, jei rizika realizuojasi'
+        },
+        {
+            id: 'vadovo_savirefleksija',
+            title: 'Vadovo savirefleksija',
+            desc: 'Sprendimų kokybės peržiūra',
+            icon: 'brain',
+            prompt: 'Esi mano strateginis koučeris. Padėk man, kaip CEO, atlikti savaitės savirefleksiją remiantis faktais.\n\nKontekstas:\n- Šios savaitės tikslas: [tikslas]\n- Svarbiausi sprendimai: [sprendimai]\n- Ką padariau gerai: [stiprybės]\n- Kur strigau: [silpnos vietos]\n- Komandos signalai: [faktai]\n- Finansinis rezultatas: [pajamos / išlaidos / marža]\n\nPateik atsakymą 4 dalimis:\n1. 5 tikslūs klausimai man, kurių vengiu, bet turiu sau atsakyti\n2. 3 pagrindinės vadovo klaidos rizikos šioje situacijoje\n3. 3 sprendimai kitai savaitei su aiškiu prioritetu (A/B/C)\n4. Viena asmeninė disciplina 7 dienoms, kuri turės didžiausią poveikį'
         }
     ];
 
+    function applyLibraryPromptLimit() {
+        LIBRARY_PROMPTS.forEach(function (item) {
+            if (!item || typeof item.prompt !== 'string') return;
+
+            var text = item.prompt.replace(/\r\n/g, '\n').trim();
+            if (text.length > TEMPLATE_CHAR_LIMIT) {
+                var truncated = text.slice(0, TEMPLATE_CHAR_LIMIT).trim();
+                var breakAt = Math.max(truncated.lastIndexOf('\n'), truncated.lastIndexOf('. '));
+                if (breakAt > Math.floor(TEMPLATE_CHAR_LIMIT * 0.7)) {
+                    truncated = truncated.slice(0, breakAt).trim();
+                }
+                text = truncated;
+            }
+
+            item.prompt = text;
+        });
+    }
+
+    applyLibraryPromptLimit();
+
     var RULES = [
-        { text: 'Kiekvienas sprendimas turi aiškų naudos pagrindimą', icon: 'check-circle' },
+        { text: 'Kiekvienas sprendimas turi aiškų verslo naudos pagrindimą', icon: 'check-circle' },
         { text: 'Pinigų srautas > pelnas > pajamos: tokia prioritetų seka', icon: 'check-circle' },
         { text: 'Veikimo rezervas < 6 mėn. = raudona zona, reikia veiksmų plano', icon: 'alert-triangle' },
         { text: 'Kiekviena savaitė turi 3 prioritetus, ne daugiau', icon: 'check-circle' },
-        { text: 'Problemos sprendžiamos „5 Kodėl" metodu', icon: 'check-circle' },
+        { text: 'Problemas spręsk „5 Kodėl" metodu', icon: 'check-circle' },
         { text: 'Valdybos ataskaitoje – tik faktai ir skaičiai, be nuomonių', icon: 'check-circle' },
         { text: 'Kiekvienas veiksmas turi terminą ir atsakingą asmenį', icon: 'check-circle' },
-        { text: 'Savaitės peržiūra: kas pavyko, kas ne, ką keičiam', icon: 'check-circle' }
+        { text: 'Savaitės peržiūra: kas pavyko, kas nepavyko, ką keičiame', icon: 'check-circle' }
     ];
 
     /* ===== STATE ===== */
@@ -145,7 +173,7 @@
     function buildMasterPrompt(data, depth) {
         var parts = [];
 
-        parts.push('ROLĖ: Esi strateginis verslo konsultantas, dirbantis su CEO.');
+        parts.push('ROLĖ: Esi strateginis verslo konsultantas, dirbantis su CEO/COO.');
         parts.push('');
 
         if (isFilled(data.goal)) {
@@ -174,7 +202,7 @@
         if (isFilled(data.question)) {
             parts.push('KLAUSIMAS: ' + data.question);
         } else {
-            parts.push('KLAUSIMAS: Kokie 3 svarbiausi prioritetai ir veiksmai šiai savaitei?');
+            parts.push('KLAUSIMAS: Kokie yra 3 svarbiausi šios savaitės prioritetai ir veiksmai?');
         }
 
         parts.push('');
@@ -188,12 +216,12 @@
     function buildDienosPrompt(data, depth) {
         var parts = [];
 
-        parts.push('ROLĖ: Esi operacijų analitikas, padedantis CEO/COO peržiūrėti vakarykštę dieną.');
+        parts.push('ROLĖ: Esi operacijų analitikas, padedantis CEO/COO įvertinti vakarykštę dieną.');
         parts.push('');
 
         parts.push('VAKARYKŠTĖS DUOMENYS:');
         if (isFilled(data.v_pajamos)) parts.push('- Pajamos: ' + data.v_pajamos);
-        if (isFilled(data.v_klientai)) parts.push('- Nauji klientai/užklausos: ' + data.v_klientai);
+        if (isFilled(data.v_klientai)) parts.push('- Nauji klientai / užklausos: ' + data.v_klientai);
         if (isFilled(data.v_islaidos)) parts.push('- Išlaidos: ' + data.v_islaidos);
         parts.push('');
 
@@ -205,7 +233,7 @@
         if (isFilled(data.question)) {
             parts.push('KLAUSIMAS: ' + data.question);
         } else {
-            parts.push('KLAUSIMAS: Ką turėčiau daryti šiandien, remiantis vakarykščiais duomenimis?');
+            parts.push('KLAUSIMAS: Ką šiandien turėčiau daryti kitaip, remiantis vakarykščiais duomenimis?');
         }
 
         parts.push('');
@@ -219,7 +247,7 @@
     function buildSavaitesPrompt(data, depth) {
         var parts = [];
 
-        parts.push('ROLĖ: Esi savaitės veiklos analitikas, pateikiantis CEO/COO savaitės apžvalgą.');
+        parts.push('ROLĖ: Esi savaitės veiklos analitikas, rengiantis CEO/COO savaitės apžvalgą.');
         parts.push('');
 
         parts.push('SAVAITĖS DUOMENYS:');
@@ -241,7 +269,7 @@
         if (isFilled(data.question)) {
             parts.push('KLAUSIMAS: ' + data.question);
         } else {
-            parts.push('KLAUSIMAS: Kuriuos projektus prioritetizuoti ir kokie 3 svarbiausi veiksmai šią savaitę?');
+            parts.push('KLAUSIMAS: Kuriuos projektus prioritetizuoti ir kokie 3 svarbiausi šios savaitės veiksmai?');
         }
 
         parts.push('');
@@ -456,8 +484,15 @@
             var li = document.createElement('li');
             li.className = 'sessions-empty';
             li.id = 'sessionsEmpty';
-            li.textContent = 'Nėra išsaugotų sesijų';
+            li.innerHTML =
+                '<span class="sessions-empty-icon" aria-hidden="true">' +
+                    '<i data-lucide="sparkles" class="icon icon--sm"></i>' +
+                '</span>' +
+                'Sesijų dar nėra. Sukurk pirmą analizę.';
             list.appendChild(li);
+            if (window.lucide && typeof window.lucide.createIcons === 'function') {
+                window.lucide.createIcons({ root: list });
+            }
             return;
         }
 
@@ -485,6 +520,10 @@
 
             list.appendChild(li);
         });
+
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+            window.lucide.createIcons({ root: list });
+        }
     }
 
     /* ===== LIBRARY ===== */
@@ -492,6 +531,11 @@
     function renderLibrary() {
         var grid = document.getElementById('libraryGrid');
         if (!grid) return;
+
+        var countEl = document.getElementById('libraryTemplateCount');
+        if (countEl) {
+            countEl.textContent = LIBRARY_PROMPTS.length + ' šablonai';
+        }
 
         grid.innerHTML = '';
 
