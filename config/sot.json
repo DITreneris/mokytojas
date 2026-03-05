@@ -1,0 +1,145 @@
+{
+  "brand": {
+    "productName": "DI Pamokų Kūrėjas",
+    "edition": "Golden Standard MVP",
+    "positioning": "Vieno puslapio pamokų kūrimo įrankis mokytojui"
+  },
+  "colors": {
+    "primaryYellow": "#F5C518",
+    "deepBlue": "#0F2A44",
+    "softBlue": "#2F6FED",
+    "lightBlueBackground": "#F4F7FB",
+    "border": "#E6ECF2",
+    "textPrimary": "#1C2B3A",
+    "textSecondary": "#6B7A8C"
+  },
+  "cta": {
+    "primary": {
+      "background": "#F5C518",
+      "text": "#0F2A44",
+      "hoverBackground": "#E6B800"
+    },
+    "secondary": {
+      "border": "#2F6FED",
+      "text": "#2F6FED"
+    }
+  },
+  "copy": {
+    "heroTitle": "DI Pamokų Kūrėjas",
+    "heroSubtitle": "Sukurk aiškią DI užklausą pamokai, užduotims ar testui per kelias minutes.",
+    "heroCtaPrimary": "Sukurti DI užklausą pamokai",
+    "heroCtaSecondary": "Peržiūrėti pavyzdžius",
+    "heroCtaMeta": "Padeda mokytojams greičiau paruošti pamokas su DI."
+  },
+  "modes": {
+    "LESSON": {
+      "label": "PAMOKA",
+      "desc": "Pilnas pamokos planas",
+      "formId": "form-lesson",
+      "fields": ["topic", "duration", "goal", "context", "question"]
+    },
+    "ASSESSMENT": {
+      "label": "PATIKRINIMAS",
+      "desc": "Žinių patikrinimo užklausa",
+      "formId": "form-assessment",
+      "fields": ["topic", "format", "difficulty", "question"]
+    },
+    "TASKS": {
+      "label": "UŽDUOTYS",
+      "desc": "Klasės ir namų darbai",
+      "formId": "form-tasks",
+      "fields": ["topic", "task_type", "constraints", "question"]
+    },
+    "PRESENTATION": {
+      "label": "PREZENTACIJA",
+      "desc": "Skaidrių struktūros užklausa",
+      "formId": "form-presentation",
+      "fields": ["topic", "slides", "style", "question"]
+    },
+    "STRATEGY": {
+      "label": "STRATEGIJA",
+      "desc": "Mokymo metodika ir planas",
+      "formId": "form-strategy",
+      "fields": ["topic", "goal", "challenges", "question"]
+    }
+  },
+  "theme": {
+    "light": {
+      "--primary": "#0F2A44",
+      "--primary-hover": "#0B2238",
+      "--primary-light": "#2F6FED",
+      "--accent-gold": "#F5C518",
+      "--accent-gold-hover": "#E6B800",
+      "--surface-0": "#F4F7FB",
+      "--surface-1": "#FFFFFF",
+      "--text": "#1C2B3A",
+      "--text-light": "#6B7A8C",
+      "--border": "#E6ECF2",
+      "--output-bg": "#0F2A44"
+    },
+    "dark": {
+      "--primary": "#2F6FED",
+      "--primary-hover": "#2458BD",
+      "--primary-light": "#4E87F2",
+      "--accent-gold": "#F5C518",
+      "--accent-gold-hover": "#E6B800",
+      "--surface-0": "#0B1422",
+      "--surface-1": "#111D2D",
+      "--text": "#E8EEF6",
+      "--text-light": "#A4B2C3",
+      "--border": "#273649",
+      "--output-bg": "#0B1625"
+    }
+  },
+  "libraryPrompts": [
+    {
+      "id": "lesson_plan",
+      "title": "Pilnas pamokos planas",
+      "desc": "Nuo įvado iki refleksijos",
+      "icon": "book-open",
+      "prompt": "Rolė: esi patyręs mokytojo asistentas, remkis formoje pateiktais duomenimis.\nOUTPUT:\n- Pamokos eiga etapais: įvadas, pagrindinė dalis, refleksija.\n- 3 aiškios veiklos su trukme ir mokytojo instrukcija.\n- 5 diskusijos klausimai mokinių įsitraukimui.\n- Praktinė užduotis su vertinimo kriterijais."
+    },
+    {
+      "id": "assessment_quiz",
+      "title": "Greitas patikrinimas",
+      "desc": "Testas ir atviri klausimai",
+      "icon": "clipboard-check",
+      "prompt": "Rolė: esi vertinimo dizaino asistentas, remkis formoje pateiktais duomenimis.\nOUTPUT:\n- Multiple choice klausimai (4 variantai, 1 teisingas), kiekius pritaikyk pagal klasę ir sudėtingumą.\n- Atviri klausimai, orientuoti į supratimą ir taikymą.\n- Aiškus atsakymų raktas.\n- Trumpi vertinimo kriterijai atviriems klausimams."
+    },
+    {
+      "id": "homework_tasks",
+      "title": "Diferencijuotos užduotys",
+      "desc": "Silpnesniems, bazinis, stipresniems",
+      "icon": "pencil-ruler",
+      "prompt": "Rolė: esi diferencijuotų užduočių kūrimo asistentas, remkis formos duomenimis.\nOUTPUT:\n- Užduotis silpnesniems su aiškia pagalbos užuomina.\n- Bazinė užduotis visai klasei.\n- Išplėsta užduotis stipresniems.\n- Vertinimo kriterijai kiekvienam lygiui."
+    },
+    {
+      "id": "presentation_outline",
+      "title": "Prezentacijos struktūra",
+      "desc": "Skaidrių planas ir tekstas",
+      "icon": "presentation",
+      "prompt": "Rolė: esi edukacinių skaidrių struktūros asistentas, remkis formos duomenimis.\nOUTPUT:\n- Skaidrių planas numeruotu sąrašu.\n- Kiekvienai skaidrei: tikslas, 2-3 punktai, vizualinė idėja.\n- Nuoseklus perėjimas tarp skaidrių.\n- Pabaigoje vienas refleksijos klausimas mokiniams."
+    },
+    {
+      "id": "teaching_strategy",
+      "title": "Mokymo strategija",
+      "desc": "Metodika ir savaitės fokusas",
+      "icon": "brain",
+      "prompt": "Rolė: esi mokymo strategijos asistentas, remkis formoje nurodytu tikslu ir iššūkiais.\nOUTPUT:\n- 3 prioritetiniai metodiniai sprendimai.\n- Trumpa veiklų seka savaitei.\n- Rizikos ir prevenciniai veiksmai.\n- 2-3 pažangos matavimo rodikliai."
+    },
+    {
+      "id": "lesson_reflection",
+      "title": "Pamokos refleksija",
+      "desc": "Kas pavyko ir ką tobulinti",
+      "icon": "refresh-ccw",
+      "prompt": "Rolė: esi refleksijos ir kokybės gerinimo asistentas, remkis formos duomenimis.\nOUTPUT:\n- 3 dalykai, kuriuos verta kartoti.\n- 3 dalykai, kuriuos verta keisti.\n- 5 žingsnių korekcijos planas kitai pamokai.\n- Viena trumpa mokytojo savirefleksijos rekomendacija."
+    }
+  ],
+  "rules": [
+    { "text": "Užklausa turi vesti į aiškų, pritaikomą pamokos rezultatą", "icon": "check-circle" },
+    { "text": "Aiškumas > sudėtingumas: vienas režimas, vienas tikslas", "icon": "check-circle" },
+    { "text": "Kiekvienas veiksmas turi būti įgyvendinamas klasėje", "icon": "check-circle" },
+    { "text": "Vertinimo kriterijai turi būti apibrėžiami iš anksto", "icon": "check-circle" },
+    { "text": "Prezentacija MVP etape yra tik tekstinis užklausos rezultatas", "icon": "check-circle" }
+  ]
+}

@@ -24,16 +24,7 @@ jobs:
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
 
-      - name: Run tests (structure + lint)
-        run: npm test
-
-      - name: Run smoke tests (320-768px)
-        run: npm run test:smoke
-
-      - name: Run E2E critical flows
-        run: npm run test:e2e
-
-      - name: Accessibility check (pa11y)
-        run: npm run test:a11y
+      - name: Run full quality gates
+        run: npm run test:mixed
         env:
           CI: true

@@ -1,7 +1,7 @@
 /**
- * Struktūriniai testai – DI Operacinis Centras (index.html)
+ * Strukturiniai testai - DI Pamoku Kurejas (index.html)
  * Tikrina, kad puslapyje yra visi būtini elementai:
- * režimų perjungiklis, formos, output, sesijos, biblioteka, taisyklės, a11y.
+ * rezimu perjungiklis, formos, output, sesijos, biblioteka, taisykles, a11y.
  * Paleisti: node tests/structure.test.js (arba npm test)
  */
 'use strict';
@@ -12,6 +12,7 @@ const path = require('path');
 const INDEX_PATH = path.join(__dirname, '..', 'index.html');
 const PRIVATUMAS_PATH = path.join(__dirname, '..', 'privatumas.html');
 const STYLE_PATH = path.join(__dirname, '..', 'style.css');
+const SOT_PATH = path.join(__dirname, '..', 'config', 'sot.json');
 const GENERATOR_PATH = path.join(__dirname, '..', 'generator.js');
 const COPY_PATH = path.join(__dirname, '..', 'copy.js');
 
@@ -42,32 +43,40 @@ function run() {
     process.exit(1);
   }
 
-  // --- Operacinis centras ---
-  if (assert(html.includes('id="operationsCenter"'), 'Operacinis centras sekcija egzistuoja')) passed++;
+  // --- Pamoku kurimo centras ---
+  if (assert(html.includes('id="operationsCenter"'), 'Pamoku kurimo centras sekcija egzistuoja')) passed++;
   else failed++;
 
-  // --- Režimų perjungiklis (3 režimai) ---
-  if (assert(html.includes('data-mode="MASTER"'), 'MASTER režimo tab egzistuoja')) passed++;
+  // --- Rezimu perjungiklis (5 rezimai) ---
+  if (assert(html.includes('data-mode="LESSON"'), 'LESSON rezimo tab egzistuoja')) passed++;
   else failed++;
-  if (assert(html.includes('data-mode="DIENOS"'), 'DIENOS režimo tab egzistuoja')) passed++;
+  if (assert(html.includes('data-mode="ASSESSMENT"'), 'ASSESSMENT rezimo tab egzistuoja')) passed++;
   else failed++;
-  if (assert(html.includes('data-mode="SAVAITES"'), 'SAVAITĖS režimo tab egzistuoja')) passed++;
+  if (assert(html.includes('data-mode="TASKS"'), 'TASKS rezimo tab egzistuoja')) passed++;
   else failed++;
-
-  // --- Režimų formos ---
-  if (assert(html.includes('id="form-master"'), 'MASTER forma egzistuoja')) passed++;
+  if (assert(html.includes('data-mode="PRESENTATION"'), 'PRESENTATION rezimo tab egzistuoja')) passed++;
   else failed++;
-  if (assert(html.includes('id="form-dienos"'), 'DIENOS forma egzistuoja')) passed++;
-  else failed++;
-  if (assert(html.includes('id="form-savaites"'), 'SAVAITĖS forma egzistuoja')) passed++;
+  if (assert(html.includes('data-mode="STRATEGY"'), 'STRATEGY rezimo tab egzistuoja')) passed++;
   else failed++;
 
-  // --- Gylio pasirinkimas (3 lygiai) ---
-  if (assert(html.includes('data-depth="GREITA"'), 'Gylis: GREITA egzistuoja')) passed++;
+  // --- Rezimu formos ---
+  if (assert(html.includes('id="form-lesson"'), 'LESSON forma egzistuoja')) passed++;
   else failed++;
-  if (assert(html.includes('data-depth="GILU"'), 'Gylis: GILU egzistuoja')) passed++;
+  if (assert(html.includes('id="form-assessment"'), 'ASSESSMENT forma egzistuoja')) passed++;
   else failed++;
-  if (assert(html.includes('data-depth="BOARD"'), 'Gylis: BOARD egzistuoja')) passed++;
+  if (assert(html.includes('id="form-tasks"'), 'TASKS forma egzistuoja')) passed++;
+  else failed++;
+  if (assert(html.includes('id="form-presentation"'), 'PRESENTATION forma egzistuoja')) passed++;
+  else failed++;
+  if (assert(html.includes('id="form-strategy"'), 'STRATEGY forma egzistuoja')) passed++;
+  else failed++;
+
+  // --- Klases pasirinkimas (1-12) ---
+  if (assert(html.includes('id="classLevelSelect"'), 'Klases select egzistuoja')) passed++;
+  else failed++;
+  if (assert(html.includes('<option value="1">1 klasė</option>'), 'Klase 1 egzistuoja')) passed++;
+  else failed++;
+  if (assert(html.includes('<option value="12">12 klasė</option>'), 'Klase 12 egzistuoja')) passed++;
   else failed++;
 
   // --- Output ---
@@ -117,7 +126,7 @@ function run() {
   else failed++;
   if (assert(html.includes('role="tabpanel"'), 'Form panels turi role="tabpanel"')) passed++;
   else failed++;
-  if (assert(html.includes('role="radiogroup"'), 'Depth selector turi role="radiogroup"')) passed++;
+  if (assert(html.includes('id="classBadge"'), 'Class badge egzistuoja')) passed++;
   else failed++;
   if (assert(html.includes('aria-live="polite"'), 'Live region output')) passed++;
   else failed++;
@@ -136,6 +145,9 @@ function run() {
   const styleFile = readFile(STYLE_PATH);
   if (assert(styleFile !== null && styleFile.length > 0, 'style.css failas egzistuoja')) passed++;
   else failed++;
+  const sotFile = readFile(SOT_PATH);
+  if (assert(sotFile !== null && sotFile.length > 0, 'config/sot.json failas egzistuoja')) passed++;
+  else failed++;
   const generatorFile = readFile(GENERATOR_PATH);
   if (assert(generatorFile !== null && generatorFile.length > 0, 'generator.js failas egzistuoja')) passed++;
   else failed++;
@@ -153,13 +165,13 @@ function run() {
   else failed++;
   if (assert(generatorFile && generatorFile.includes('LIBRARY_PROMPTS'), 'LIBRARY_PROMPTS apibrėžti (generator.js)')) passed++;
   else failed++;
-  if (assert(generatorFile && generatorFile.includes('DEPTH_LEVELS'), 'DEPTH_LEVELS apibrėžti (generator.js)')) passed++;
+  if (assert(generatorFile && generatorFile.includes('activeClassLevel'), 'activeClassLevel naudojamas (generator.js)')) passed++;
   else failed++;
   if (assert(generatorFile && generatorFile.includes('MODES'), 'MODES apibrėžti (generator.js)')) passed++;
   else failed++;
 
   // --- CSS kintamieji ---
-  if (assert(styleFile && styleFile.includes('--primary: #4A148C'), 'CSS kintamasis --primary: #4A148C')) passed++;
+  if (assert(styleFile && styleFile.includes('--primary: #0F2A44'), 'CSS kintamasis --primary: #0F2A44')) passed++;
   else failed++;
 
   console.log('\n---');

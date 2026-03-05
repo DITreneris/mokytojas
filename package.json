@@ -2,15 +2,16 @@
   "name": "di-operacinis-centras",
   "version": "1.0.0",
   "private": true,
-  "description": "DI Operacinis Centras – strateginis DI asistentas TOP vadovams (CEO/COO)",
+  "description": "DI Pamoku Kurejas - edukacinis DI uzklausu generatorius mokytojams",
   "scripts": {
-    "test": "node tests/structure.test.js && npm run lint:html && npm run lint:js",
+    "test": "npm run test:docs && node tests/structure.test.js && npm run lint:html && npm run lint:js",
+    "test:docs": "node tests/docs-hygiene.test.js",
     "test:structure": "node tests/structure.test.js",
-    "test:smoke": "start-server-and-test \"serve -s . -l 3000\" http://127.0.0.1:3000/ \"playwright test tests/e2e/smoke.spec.js\"",
-    "test:e2e": "start-server-and-test \"serve -s . -l 3000\" http://127.0.0.1:3000/ \"playwright test tests/e2e/core-flow.spec.js\"",
+    "test:smoke": "start-server-and-test \"serve . -l 3000\" http://127.0.0.1:3000/ \"playwright test tests/e2e/smoke.spec.js\"",
+    "test:e2e": "start-server-and-test \"serve . -l 3000\" http://127.0.0.1:3000/ \"playwright test tests/e2e/core-flow.spec.js\"",
     "test:mixed": "npm run test && npm run test:smoke && npm run test:e2e && npm run test:a11y",
-    "test:a11y": "start-server-and-test \"serve -s . -l 3000\" http://127.0.0.1:3000/ \"pa11y http://127.0.0.1:3000/ --config .pa11yrc.json && pa11y http://127.0.0.1:3000/privatumas.html --config .pa11yrc.json\"",
-    "lint:html": "npx html-validator-cli --file index.html",
+    "test:a11y": "start-server-and-test \"serve . -l 3000\" http://127.0.0.1:3000/ \"pa11y http://127.0.0.1:3000/ --config .pa11yrc.json && pa11y http://127.0.0.1:3000/privatumas.html --config .pa11yrc.json\"",
+    "lint:html": "npx html-validator-cli --file index.html && npx html-validator-cli --file privatumas.html",
     "lint:js": "eslint . --ext .js"
   },
   "devDependencies": {

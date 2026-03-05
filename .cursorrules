@@ -1,4 +1,4 @@
-# Cursor rules – DI Vaizdo Generatorius
+# Cursor rules - DI Pamoku Kurejas (Edu MVP)
 
 ## Projektas
 - Statinė HTML aplikacija (`index.html` + `privatumas.html`).
@@ -19,7 +19,10 @@
 
 ## Prieš merge / deploy
 - `npm test` praeina
-- Po deploy: `docs/TESTAVIMAS.md`
+- Jei keistas UX/flow: `npm run test:smoke` ir `npm run test:a11y`
+- Jei keistas kritinis srautas: `npm run test:e2e`
 
 ## Dokumentacija
-- Jei keiti UX / flow / funkcijas: atnaujink `README.md`, `todo.md`, `roadmap.md`, `CHANGELOG.md`, `DEPLOYMENT.md` pagal poreikį.
+- Aktyvios dokumentacijos tiesos saltinis: `docs/INDEX.md`.
+- Jei keiti UX / flow / funkcijas: atnaujink tik aktyvius failus, nurodytus `docs/INDEX.md`.
+- Neversk atnaujinti archyviniu failu, jei jie nebuvo grazinti i aktyvia zona.

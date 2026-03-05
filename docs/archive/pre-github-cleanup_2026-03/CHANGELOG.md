@@ -5,6 +5,9 @@ Formatas pagal [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), versija
 ## [Nereleisuota]
 
 ### Prideta
+- Šablonų bibliotekoje pridėtas 6-as šablonas: `Vadovo savirefleksija` (CEO savaitinei sprendimų peržiūrai).
+- Įvestas globalus šablonų ilgio limitas: iki `1100` simbolių visiems bibliotekos šablonams.
+- Bibliotekos šablonų skaitiklis padarytas dinaminis (`libraryTemplateCount`) ir rodo realų šablonų kiekį.
 - Dokumentacija: atnaujintas `README.md`, pridėti `todo.md` ir `roadmap.md`.
 - `docs/FIRST_RUN_USER_JOURNEY_AUDIT.md` su pirmo paleidimo kelionės analize, mikrocopy paketu, UX backlogu ir QA checklist.
 - `index.html` output zonoje pridėti diskretiški mygtukai: `Atidaryti ChatGPT`, `Atidaryti Claude`, `Atidaryti Gemini`.
@@ -14,6 +17,11 @@ Formatas pagal [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), versija
 - Pridėtas `playwright.config.js` ir nauji test scriptai: `test:smoke`, `test:e2e`, `test:mixed`.
 
 ### Pakeista
+- `README.md` papildytas aktyviu `Golden Standard (UI)` skyriumi (violetinė brand kryptis, hierarchija, CTA dominavimas, a11y).
+- `style.css` perpoliruotas white/dark režimams: aiškesnė tonalinė hierarchija, layered shadows, stipresnis CTA, input ir sessions vizualinė tvarka.
+- `index.html` ir `generator.js` mikrocopy/perrašai suvienodinti į aiškią CEO kalbą (`užklausa` vietoje perteklinių terminų).
+- `index.html` bibliotekos tekstai ir sesijų empty state atnaujinti į aiškesnę verslo kalbą.
+- `tests/structure.test.js` pritaikytas naujai terminijai (`Kopijuoti užklausą`) su backward-compatible tikrinimu.
 - `README.md` sutvarkytas pagal dabartinį projektą (DI Operacinis Centras).
 - `index.html` mikrocopy: naudos orientuotas hero tekstas, aiškesni CTA, gylio rekomendacija, "kas toliau" žinutė po kopijavimo, aiškesnis sesijų trynimo tekstas.
 - `privatumas.html` terminija ir localStorage aprašas suderinti su `DI Operacinis Centras`.
@@ -28,6 +36,10 @@ Formatas pagal [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), versija
 - `style.css` atnaujintas mobile remediacijai (`320–768`): touch target’ai 44px, top-nav ir accordion sutalpinimas, output/sessions wrap, `session-item:focus-visible`.
 - CI/deploy grandinėje įtraukti smoke testai; CI papildyta Playwright browser diegimo fazė.
 - `docs/QA_STANDARTAS.md`, `docs/TESTAVIMAS.md`, `docs/FIRST_RUN_USER_JOURNEY_AUDIT.md`, `DEPLOYMENT.md` papildyti mobile/test gate kriterijais.
+
+### Pataisyta
+- A11y kontrasto regresijos (`Pa11y`): `header-step-num`, `.field-help`, `#sessionsEmpty` elementams pakeltas kontrastas iki WCAG 2.1 AA.
+- `npm run test:a11y` dabar praeina be klaidų (`/` ir `/privatumas.html`).
 
 ---
 

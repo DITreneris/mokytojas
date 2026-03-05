@@ -1,26 +1,35 @@
-# Agentų taisyklės (lean)
+# Agentų taisyklės (Edu MVP)
 
-Tikslas: minimali agentų darbo tvarka šiam repo.
+Tikslas: vienareiksmis darbo modelis edukaciniam MVP.
 
-## Rolės
+## Rolės ir atsakomybės
 
-- **Orchestrator** - nustato prioritetą ir užduočių seką.
-- **Content** - tvarko tekstus ir promptus.
-- **UI/UX** - tvarko UX, a11y, vizualinę hierarchiją.
-- **QA** - tikrina kokybę prieš merge ir release.
+- **Orchestrator** - valdo prioritetą, suformuoja užduoties aprašą ir priima galutinį rezultatą.
+- **Content** - atsako už copy, promptų semantiką ir mokytojo konteksto aiškumą.
+- **UI/UX** - atsako už vartotojo srautą, mobile hierarchiją ir a11y.
+- **QA** - vykdo kokybės vartus ir pateikia release rekomendaciją.
 
-## Darbo seka
+## Stage-gate darbo seka
 
-1. Orchestrator suformuoja užduotį.
-2. Content/UI įgyvendina pakeitimus.
-3. QA patikrina ir grąžina taisymams arba patvirtina.
+1. **Intake (Orchestrator)**  
+   Sukuria trumpą užduoties aprašą: tikslas, apribojimai, priėmimo kriterijai, liečiami failai.
+2. **Implement (Content + UI/UX)**  
+   Įgyvendina pakeitimus ir pateikia dokumentų delta sąrašą.
+3. **Verify (QA)**  
+   Paleidžia testų vartus pagal pakeitimo tipą.
+4. **Release readiness (Orchestrator + QA)**  
+   Užduotis uždaroma tik jei praeina kodas, dokumentacija ir testų vartai.
 
 ## Kokybės vartai
 
-- Prieš merge: `npm test`.
-- Jei keistas UX ar flow: papildomai smoke/a11y patikra.
+- **Visada privaloma:** `npm test`
+- **Jei keistas UX / flow / interakcijos:** `npm run test:smoke` ir `npm run test:a11y`
+- **Jei keistas kritinis srautas (formos, generavimas, sesijos, kopijavimas):** `npm run test:e2e`
+- **CI yra tiesos šaltinis:** lokalus minimumas negali prieštarauti CI vartams.
 
-## Dokumentų taisyklė
+## Aktyvi dokumentacija
 
-- Aktyvūs dokumentai: `README.md`, `docs/INDEX.md`, `todo.md`, `AGENTS.md`.
-- Visa kita dokumentacija laikoma archyve (`docs/archive/`), jei nėra aiškiai grąžinta į aktyvią zoną.
+Kanoninis aktyvių dokumentų sąrašas laikomas tik `docs/INDEX.md`.
+
+- Jei failas nėra pažymėtas aktyvus `docs/INDEX.md`, jis laikomas archyvu.
+- Archyvo failai neatnaujinami, nebent jie aiškiai grąžinti į aktyvią zoną.

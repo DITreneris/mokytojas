@@ -35,11 +35,15 @@ dist/
 build/
 *.min.js
 *.min.css
+coverage/
 
 # ─── Node ───
 node_modules/
 yarn.lock
 npm-debug.log*
+test-results/
+playwright-report/
+.nyc_output/
 
 # ─── Env / secrets ───
 .env

@@ -5,8 +5,9 @@
     var MAX_SESSIONS = 5;
     var TEMPLATE_CHAR_LIMIT = 1100;
     var THEME_KEY = APP_ID + '_theme';
-    var DEPTH_KEY = APP_ID + '_depth';
+    var CLASS_LEVEL_KEY = APP_ID + '_class_level';
     var SESSIONS_KEY = APP_ID + '_sessions';
+    var CLEAR_SESSIONS_UNDO_MS = 8000;
     var AI_TOOL_URLS = {
         chatgpt: 'https://chatgpt.com/',
         claude: 'https://claude.ai/',
@@ -19,90 +20,123 @@
     };
 
     /* ===== CONSTANTS ===== */
-
-    var MODES = {
-        MASTER: {
-            label: 'STRATEGINIS',
-            desc: 'Strateginis savaitės/mėnesio kontekstas',
-            formId: 'form-master',
-            fields: ['goal', 'horizon', 'income', 'expenses', 'profit', 'cash', 'runway', 'facts', 'question']
+    var DEFAULT_SOT = {
+        modes: {
+            LESSON: {
+                label: 'PAMOKA',
+                desc: 'Pilnas pamokos planas',
+                formId: 'form-lesson',
+                fields: ['topic', 'duration', 'goal', 'context', 'question']
+            },
+            ASSESSMENT: {
+                label: 'PATIKRINIMAS',
+                desc: 'Žinių patikrinimo užklausa',
+                formId: 'form-assessment',
+                fields: ['topic', 'format', 'difficulty', 'question']
+            },
+            TASKS: {
+                label: 'UŽDUOTYS',
+                desc: 'Klasės ir namų darbai',
+                formId: 'form-tasks',
+                fields: ['topic', 'task_type', 'constraints', 'question']
+            },
+            PRESENTATION: {
+                label: 'PREZENTACIJA',
+                desc: 'Skaidrių struktūros užklausa',
+                formId: 'form-presentation',
+                fields: ['topic', 'slides', 'style', 'question']
+            },
+            STRATEGY: {
+                label: 'STRATEGIJA',
+                desc: 'Mokymo metodika ir planas',
+                formId: 'form-strategy',
+                fields: ['topic', 'goal', 'challenges', 'question']
+            }
         },
-        DIENOS: {
-            label: 'DIENOS',
-            desc: 'Vakarykštės operacijos apžvalga',
-            formId: 'form-dienos',
-            fields: ['v_pajamos', 'v_klientai', 'v_islaidos', 'v_ivykiai', 'question']
-        },
-        SAVAITES: {
-            label: 'SAVAITĖS',
-            desc: 'Savaitės projektai ir veikimo rezervas',
-            formId: 'form-savaites',
-            fields: ['s_pajamos', 's_sanaudos', 's_likutis', 'projektai', 's_pipeline', 'question']
+        libraryPrompts: [
+            {
+                id: 'lesson_plan',
+                title: 'Pilnas pamokos planas',
+                desc: 'Nuo įvado iki refleksijos',
+                icon: 'book-open',
+                prompt: 'Rolė: esi patyręs mokytojo asistentas, remkis formoje pateiktais duomenimis.\nOUTPUT:\n- Pamokos eiga etapais: įvadas, pagrindinė dalis, refleksija.\n- 3 aiškios veiklos su trukme ir mokytojo instrukcija.\n- 5 diskusijos klausimai mokinių įsitraukimui.\n- Praktinė užduotis su vertinimo kriterijais.'
+            },
+            {
+                id: 'assessment_quiz',
+                title: 'Greitas patikrinimas',
+                desc: 'Testas ir atviri klausimai',
+                icon: 'clipboard-check',
+                prompt: 'Rolė: esi vertinimo dizaino asistentas, remkis formoje pateiktais duomenimis.\nOUTPUT:\n- Multiple choice klausimai (4 variantai, 1 teisingas), kiekius pritaikyk pagal klasę ir sudėtingumą.\n- Atviri klausimai, orientuoti į supratimą ir taikymą.\n- Aiškus atsakymų raktas.\n- Trumpi vertinimo kriterijai atviriems klausimams.'
+            },
+            {
+                id: 'homework_tasks',
+                title: 'Diferencijuotos užduotys',
+                desc: 'Silpnesniems, bazinis, stipresniems',
+                icon: 'pencil-ruler',
+                prompt: 'Rolė: esi diferencijuotų užduočių kūrimo asistentas, remkis formos duomenimis.\nOUTPUT:\n- Užduotis silpnesniems su aiškia pagalbos užuomina.\n- Bazinė užduotis visai klasei.\n- Išplėsta užduotis stipresniems.\n- Vertinimo kriterijai kiekvienam lygiui.'
+            },
+            {
+                id: 'presentation_outline',
+                title: 'Prezentacijos struktūra',
+                desc: 'Skaidrių planas ir tekstas',
+                icon: 'presentation',
+                prompt: 'Rolė: esi edukacinių skaidrių struktūros asistentas, remkis formos duomenimis.\nOUTPUT:\n- Skaidrių planas numeruotu sąrašu.\n- Kiekvienai skaidrei: tikslas, 2-3 punktai, vizualinė idėja.\n- Nuoseklus perėjimas tarp skaidrių.\n- Pabaigoje vienas refleksijos klausimas mokiniams.'
+            },
+            {
+                id: 'teaching_strategy',
+                title: 'Mokymo strategija',
+                desc: 'Metodika ir savaitės fokusas',
+                icon: 'brain',
+                prompt: 'Rolė: esi mokymo strategijos asistentas, remkis formoje nurodytu tikslu ir iššūkiais.\nOUTPUT:\n- 3 prioritetiniai metodiniai sprendimai.\n- Trumpa veiklų seka savaitei.\n- Rizikos ir prevenciniai veiksmai.\n- 2-3 pažangos matavimo rodikliai.'
+            },
+            {
+                id: 'lesson_reflection',
+                title: 'Pamokos refleksija',
+                desc: 'Kas pavyko ir ką tobulinti',
+                icon: 'refresh-ccw',
+                prompt: 'Rolė: esi refleksijos ir kokybės gerinimo asistentas, remkis formos duomenimis.\nOUTPUT:\n- 3 dalykai, kuriuos verta kartoti.\n- 3 dalykai, kuriuos verta keisti.\n- 5 žingsnių korekcijos planas kitai pamokai.\n- Viena trumpa mokytojo savirefleksijos rekomendacija.'
+            }
+        ],
+        rules: [
+            { text: 'Užklausa turi vesti į aiškų, pritaikomą pamokos rezultatą', icon: 'check-circle' },
+            { text: 'Aiškumas > sudėtingumas: vienas režimas, vienas tikslas', icon: 'check-circle' },
+            { text: 'Kiekvienas veiksmas turi būti įgyvendinamas klasėje', icon: 'check-circle' },
+            { text: 'Vertinimo kriterijai turi būti apibrėžiami iš anksto', icon: 'check-circle' },
+            { text: 'Prezentacija MVP etape yra tik tekstinis užklausos rezultatas', icon: 'check-circle' }
+        ],
+        copy: {},
+        theme: {
+            light: {
+                '--primary': '#0F2A44',
+                '--primary-hover': '#0B2238',
+                '--primary-light': '#2F6FED',
+                '--accent-gold': '#F5C518',
+                '--accent-gold-hover': '#E6B800',
+                '--surface-0': '#F4F7FB',
+                '--surface-1': '#FFFFFF',
+                '--text': '#1C2B3A',
+                '--text-light': '#6B7A8C',
+                '--border': '#E6ECF2',
+                '--output-bg': '#0F2A44'
+            },
+            dark: {
+                '--primary': '#2F6FED',
+                '--primary-hover': '#2458BD',
+                '--primary-light': '#4E87F2',
+                '--accent-gold': '#F5C518',
+                '--accent-gold-hover': '#E6B800',
+                '--surface-0': '#0B1422',
+                '--surface-1': '#111D2D',
+                '--text': '#E8EEF6',
+                '--text-light': '#A4B2C3',
+                '--border': '#273649',
+                '--output-bg': '#0B1625'
+            }
         }
     };
 
-    var DEPTH_LEVELS = {
-        GREITA: {
-            label: 'Greita',
-            instruction: 'Atsakyk trumpai ir aiškiai: daugiausia 3 punktai, kiekvienas po 1-2 sakinius, be įžangos.',
-            format: '3 prioritetai + 3 veiksmai + 1 rizika'
-        },
-        GILU: {
-            label: 'Gilu',
-            instruction: 'Pateik išsamią analizę su kontekstu ir pagrindimu. Kiekvienam punktui nurodyk, kodėl svarbu ir koks poveikis. Remkis skaičiais.',
-            format: '3 prioritetai (su naudos pagrindimu) + 5 veiksmai (su terminais) + 2 rizikos (su mažinimo planais) + 1 ilgalaikė rekomendacija'
-        },
-        BOARD: {
-            label: 'Valdybai',
-            instruction: 'Parenk valdybos lygio santrauką. Tik faktai ir skaičiai, be nuomonių. Struktūra: Santrauka -> Finansai -> Veiksmai -> Rizikos. Kalba formali.',
-            format: 'Santrauka (3 sakiniai) + Finansinė padėtis (lentelė) + TOP 3 prioritetai + 5 veiksmai su rodikliais + Rizikų matrica + Rekomendacija valdybai'
-        }
-    };
-
-    var LIBRARY_PROMPTS = [
-        {
-            id: 'unit_economics',
-            title: 'Vieneto ekonomika',
-            desc: 'Vieneto ekonomikos analizė',
-            icon: 'calculator',
-            prompt: 'Esi finansų analitikas. Mano verslo duomenys:\n- Vidutinės pajamos iš kliento (ARPU): [suma]\n- Kliento pritraukimo kaina (CAC): [suma]\n- Kliento gyvavimo vertė (LTV): [suma]\n- Bendroji marža: [%]\n\nAtlik vieneto ekonomikos analizę:\n1. Įvertink LTV/CAC santykį\n2. Nustatyk atsipirkimo laikotarpį\n3. Įvardyk didžiausius svertus (ARPU didinimas, CAC mažinimas, išlaikymo gerinimas)\n4. Pasiūlyk 3 konkrečius veiksmus'
-        },
-        {
-            id: 'augimo_svertai',
-            title: 'Augimo svertai',
-            desc: 'Augimo galimybių identifikavimas',
-            icon: 'trending-up',
-            prompt: 'Esi augimo strategas. Mano verslo situacija:\n- Dabartinės mėnesio pajamos: [suma]\n- Tikslas per [laikotarpis]: [suma]\n- Dabartiniai kanalai: [kanalai]\n- Konversijos rodiklis: [%]\n\nNustatyk augimo svertus:\n1. TOP 3 svertai su didžiausiu naudos potencialu\n2. Kiekvienam svertui nurodyk: ką darome, kokį poveikį tikimės gauti ir per kiek laiko\n3. Greitos pergalės (iki 2 savaičių)\n4. Pagrindinės rizikos ir priklausomybės'
-        },
-        {
-            id: 'cash_runway',
-            title: 'Pinigų rezervas',
-            desc: 'Pinigų srauto analizė ir planavimas',
-            icon: 'wallet',
-            prompt: 'Esi finansų konsultantas. Mano situacija:\n- Grynųjų likutis: [suma]\n- Mėnesio pajamos: [suma]\n- Mėnesio išlaidos: [suma]\n- Išlaidų tempo tendencija: [didėja/mažėja/stabili]\n\nAtlik pinigų rezervo analizę:\n1. Įvertink dabartinį veikimo rezervą mėnesiais\n2. Pateik scenarijus: optimistinis / bazinis / pesimistinis\n3. Pasiūlyk pinigų srauto gerinimo veiksmus (30/60/90 dienų)\n4. Įvardyk raudonos zonos rodiklius - kada reikia veikti'
-        },
-        {
-            id: 'kainodara',
-            title: 'Kainodara',
-            desc: 'Kainodaros strategijos optimizavimas',
-            icon: 'tag',
-            prompt: 'Esi kainodaros ekspertas. Mano produktas/paslauga:\n- Dabartinė kaina: [kaina]\n- Konkurentų kainų diapazonas: [nuo-iki]\n- Bendroji marža: [%]\n- Klientų tipai: [segmentai]\n\nPateik kainodaros rekomendacijas:\n1. Įvertink dabartinę kainą rinkos kontekste\n2. Pagrįsk vertę per kliento gaunamą naudą\n3. Pasiūlyk kelių planų kainodaros variantus\n4. Parenk kainos testavimo planą'
-        },
-        {
-            id: 'riziku_valdymas',
-            title: 'Rizikų valdymas',
-            desc: 'Pagrindinių rizikų identifikavimas',
-            icon: 'shield-alert',
-            prompt: 'Esi rizikų valdymo specialistas. Mano verslo kontekstas:\n- Sritis: [sritis]\n- Komandos dydis: [žmonės]\n- Pagrindiniai klientai: [kiek, koncentracija]\n- Pajamų šaltiniai: [šaltiniai]\n\nAtlik rizikų auditą:\n1. Išskirk TOP 5 rizikas (tikimybė x poveikis)\n2. Kiekvienai rizikai pateik prevencijos ir mažinimo planą\n3. Įvardyk ankstyvuosius įspėjamuosius rodiklius\n4. Parenk veiksmų planą, jei rizika realizuojasi'
-        },
-        {
-            id: 'vadovo_savirefleksija',
-            title: 'Vadovo savirefleksija',
-            desc: 'Sprendimų kokybės peržiūra',
-            icon: 'brain',
-            prompt: 'Esi mano strateginis koučeris. Padėk man, kaip CEO, atlikti savaitės savirefleksiją remiantis faktais.\n\nKontekstas:\n- Šios savaitės tikslas: [tikslas]\n- Svarbiausi sprendimai: [sprendimai]\n- Ką padariau gerai: [stiprybės]\n- Kur strigau: [silpnos vietos]\n- Komandos signalai: [faktai]\n- Finansinis rezultatas: [pajamos / išlaidos / marža]\n\nPateik atsakymą 4 dalimis:\n1. 5 tikslūs klausimai man, kurių vengiu, bet turiu sau atsakyti\n2. 3 pagrindinės vadovo klaidos rizikos šioje situacijoje\n3. 3 sprendimai kitai savaitei su aiškiu prioritetu (A/B/C)\n4. Viena asmeninė disciplina 7 dienoms, kuri turės didžiausią poveikį'
-        }
-    ];
+    var MODES = cloneJson(DEFAULT_SOT.modes);
+    var LIBRARY_PROMPTS = cloneJson(DEFAULT_SOT.libraryPrompts);
 
     function applyLibraryPromptLimit() {
         LIBRARY_PROMPTS.forEach(function (item) {
@@ -124,22 +158,54 @@
 
     applyLibraryPromptLimit();
 
-    var RULES = [
-        { text: 'Kiekvienas sprendimas turi aiškų verslo naudos pagrindimą', icon: 'check-circle' },
-        { text: 'Pinigų srautas > pelnas > pajamos: tokia prioritetų seka', icon: 'check-circle' },
-        { text: 'Veikimo rezervas < 6 mėn. = raudona zona, reikia veiksmų plano', icon: 'alert-triangle' },
-        { text: 'Kiekviena savaitė turi 3 prioritetus, ne daugiau', icon: 'check-circle' },
-        { text: 'Problemas spręsk „5 Kodėl" metodu', icon: 'check-circle' },
-        { text: 'Valdybos ataskaitoje – tik faktai ir skaičiai, be nuomonių', icon: 'check-circle' },
-        { text: 'Kiekvienas veiksmas turi terminą ir atsakingą asmenį', icon: 'check-circle' },
-        { text: 'Savaitės peržiūra: kas pavyko, kas nepavyko, ką keičiame', icon: 'check-circle' }
-    ];
+    var RULES = cloneJson(DEFAULT_SOT.rules);
+    var COPY_TEXT = {};
+    var THEME_TOKENS = DEFAULT_SOT.theme;
+
+    function cloneJson(value) {
+        return JSON.parse(JSON.stringify(value));
+    }
+
+    function assignSotConfig(sot) {
+        if (!sot || typeof sot !== 'object') return;
+        if (sot.modes && typeof sot.modes === 'object') MODES = sot.modes;
+        if (Array.isArray(sot.libraryPrompts)) LIBRARY_PROMPTS = sot.libraryPrompts;
+        if (Array.isArray(sot.rules)) RULES = sot.rules;
+        if (sot.copy && typeof sot.copy === 'object') COPY_TEXT = sot.copy;
+        if (sot.theme && typeof sot.theme === 'object') THEME_TOKENS = sot.theme;
+        applyLibraryPromptLimit();
+    }
+
+    function loadSotConfig() {
+        // Local file mode (file://) commonly blocks fetch in browsers.
+        if (window.location && window.location.protocol === 'file:') {
+            return Promise.resolve(cloneJson(DEFAULT_SOT));
+        }
+
+        return fetch('config/sot.json', { cache: 'no-store' })
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error('Failed loading config/sot.json');
+                }
+                return response.json();
+            })
+            .then(function (remoteConfig) {
+                var merged = cloneJson(DEFAULT_SOT);
+                Object.assign(merged, remoteConfig || {});
+                return merged;
+            })
+            .catch(function () {
+                return cloneJson(DEFAULT_SOT);
+            });
+    }
 
     /* ===== STATE ===== */
 
-    var activeMode = 'MASTER';
-    var activeDepth = 'GREITA';
+    var activeMode = 'LESSON';
+    var activeClassLevel = '7';
     var formData = {};
+    var lastClearedSessions = null;
+    var clearUndoTimer = null;
 
     function initFormData() {
         formData = {};
@@ -168,125 +234,141 @@
         return String(value || '').trim().length > 0;
     }
 
+    function hasAnyFormInput() {
+        return Object.keys(MODES).some(function (mode) {
+            if (!formData[mode]) return false;
+            return MODES[mode].fields.some(function (field) {
+                return isFilled(formData[mode][field]);
+            });
+        });
+    }
+
+    function updateStickyCopyVisibility() {
+        var stickyCopy = document.getElementById('stickyCopyBtn');
+        if (!stickyCopy) return;
+        var shouldShow = hasAnyFormInput();
+        stickyCopy.classList.toggle('is-hidden', !shouldShow);
+        stickyCopy.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+        stickyCopy.disabled = !shouldShow;
+    }
+
     /* ===== PROMPT GENERATION ===== */
 
-    function buildMasterPrompt(data, depth) {
+    function buildLessonPrompt(data) {
         var parts = [];
 
-        parts.push('ROLĖ: Esi strateginis verslo konsultantas, dirbantis su CEO/COO.');
+        parts.push('Rolė: esi patyręs mokytojo asistentas, kuriantis aiškų pamokos planą.');
         parts.push('');
 
-        if (isFilled(data.goal)) {
-            parts.push('KONTEKSTAS:');
-            parts.push('- Strateginis tikslas: ' + data.goal);
-            if (isFilled(data.horizon)) parts.push('- Laiko horizontas: ' + data.horizon);
+        parts.push('PAMOKOS KONTEKSTAS:');
+        parts.push('- Klasė: ' + activeClassLevel + ' klasė');
+        if (isFilled(data.topic)) parts.push('- Tema: ' + data.topic);
+        if (isFilled(data.duration)) parts.push('- Trukmė: ' + data.duration);
+        if (isFilled(data.goal)) parts.push('- Tikslas: ' + data.goal);
+        parts.push('');
+
+        if (isFilled(data.context)) {
+            parts.push('PAPILDOMAS KONTEKSTAS: ' + data.context);
             parts.push('');
         }
 
-        var hasFinancials = isFilled(data.income) || isFilled(data.expenses) || isFilled(data.profit) || isFilled(data.cash) || isFilled(data.runway);
-        if (hasFinancials) {
-            parts.push('FINANSAI:');
-            if (isFilled(data.income)) parts.push('- Pajamos (mėn.): ' + data.income);
-            if (isFilled(data.expenses)) parts.push('- Išlaidos (mėn.): ' + data.expenses);
-            if (isFilled(data.profit)) parts.push('- Pelnas (mėn.): ' + data.profit);
-            if (isFilled(data.cash)) parts.push('- Grynieji likučiai: ' + data.cash);
-            if (isFilled(data.runway)) parts.push('- Veikimo rezervas (mėn.): ' + data.runway);
-            parts.push('');
-        }
-
-        if (isFilled(data.facts)) {
-            parts.push('FAKTAI: ' + data.facts);
-            parts.push('');
-        }
-
+        parts.push('UŽDUOTIS:');
         if (isFilled(data.question)) {
-            parts.push('KLAUSIMAS: ' + data.question);
+            parts.push(data.question);
         } else {
-            parts.push('KLAUSIMAS: Kokie yra 3 svarbiausi šios savaitės prioritetai ir veiksmai?');
+            parts.push('Paruošk pilną pamokos planą su įvadu, veiklomis, diskusijos klausimais, praktine užduotimi ir refleksija.');
         }
-
-        parts.push('');
-        parts.push('GYLIS: ' + depth.instruction);
-        parts.push('');
-        parts.push('IŠVESTIES FORMATAS: ' + depth.format);
 
         return parts.join('\n');
     }
 
-    function buildDienosPrompt(data, depth) {
+    function buildAssessmentPrompt(data) {
         var parts = [];
 
-        parts.push('ROLĖ: Esi operacijų analitikas, padedantis CEO/COO įvertinti vakarykštę dieną.');
+        parts.push('Rolė: esi vertinimo dizaino asistentas mokytojui.');
         parts.push('');
-
-        parts.push('VAKARYKŠTĖS DUOMENYS:');
-        if (isFilled(data.v_pajamos)) parts.push('- Pajamos: ' + data.v_pajamos);
-        if (isFilled(data.v_klientai)) parts.push('- Nauji klientai / užklausos: ' + data.v_klientai);
-        if (isFilled(data.v_islaidos)) parts.push('- Išlaidos: ' + data.v_islaidos);
+        parts.push('PATIKRINIMO KONTEKSTAS:');
+        parts.push('- Klasė: ' + activeClassLevel + ' klasė');
+        if (isFilled(data.topic)) parts.push('- Tema: ' + data.topic);
+        if (isFilled(data.format)) parts.push('- Formatas: ' + data.format);
+        if (isFilled(data.difficulty)) parts.push('- Sudėtingumas: ' + data.difficulty);
         parts.push('');
-
-        if (isFilled(data.v_ivykiai)) {
-            parts.push('SVARBIAUSI ĮVYKIAI: ' + data.v_ivykiai);
-            parts.push('');
-        }
-
+        parts.push('UŽDUOTIS:');
         if (isFilled(data.question)) {
-            parts.push('KLAUSIMAS: ' + data.question);
+            parts.push(data.question);
         } else {
-            parts.push('KLAUSIMAS: Ką šiandien turėčiau daryti kitaip, remiantis vakarykščiais duomenimis?');
+            parts.push('Sukurk testą su multiple choice ir atvirais klausimais, pridėk atsakymų raktą.');
         }
-
-        parts.push('');
-        parts.push('GYLIS: ' + depth.instruction);
-        parts.push('');
-        parts.push('IŠVESTIES FORMATAS: ' + depth.format);
-
         return parts.join('\n');
     }
 
-    function buildSavaitesPrompt(data, depth) {
+    function buildTasksPrompt(data) {
         var parts = [];
 
-        parts.push('ROLĖ: Esi savaitės veiklos analitikas, rengiantis CEO/COO savaitės apžvalgą.');
+        parts.push('Rolė: esi mokymosi užduočių kūrimo asistentas.');
         parts.push('');
-
-        parts.push('SAVAITĖS DUOMENYS:');
-        if (isFilled(data.s_pajamos)) parts.push('- Pajamos: ' + data.s_pajamos);
-        if (isFilled(data.s_sanaudos)) parts.push('- Sąnaudos: ' + data.s_sanaudos);
-        if (isFilled(data.s_likutis)) parts.push('- Grynųjų likutis: ' + data.s_likutis);
+        parts.push('UŽDUOČIŲ KONTEKSTAS:');
+        parts.push('- Klasė: ' + activeClassLevel + ' klasė');
+        if (isFilled(data.topic)) parts.push('- Tema: ' + data.topic);
+        if (isFilled(data.task_type)) parts.push('- Užduočių tipas: ' + data.task_type);
+        if (isFilled(data.constraints)) parts.push('- Apribojimai: ' + data.constraints);
         parts.push('');
-
-        if (isFilled(data.projektai)) {
-            parts.push('AKTYVŪS PROJEKTAI: ' + data.projektai);
-            parts.push('');
-        }
-
-        if (isFilled(data.s_pipeline)) {
-            parts.push('PARDAVIMŲ EILĖ: ' + data.s_pipeline);
-            parts.push('');
-        }
-
+        parts.push('UŽDUOTIS:');
         if (isFilled(data.question)) {
-            parts.push('KLAUSIMAS: ' + data.question);
+            parts.push(data.question);
         } else {
-            parts.push('KLAUSIMAS: Kuriuos projektus prioritetizuoti ir kokie 3 svarbiausi šios savaitės veiksmai?');
+            parts.push('Sukurk klasės, namų ir projektines užduotis su vertinimo kriterijais.');
         }
+        return parts.join('\n');
+    }
 
-        parts.push('');
-        parts.push('GYLIS: ' + depth.instruction);
-        parts.push('');
-        parts.push('IŠVESTIES FORMATAS: ' + depth.format);
+    function buildPresentationPrompt(data) {
+        var parts = [];
 
+        parts.push('Rolė: esi edukacinių prezentacijų struktūros asistentas.');
+        parts.push('');
+        parts.push('PREZENTACIJOS KONTEKSTAS:');
+        parts.push('- Klasė: ' + activeClassLevel + ' klasė');
+        if (isFilled(data.topic)) parts.push('- Tema: ' + data.topic);
+        if (isFilled(data.slides)) parts.push('- Skaidrių kiekis: ' + data.slides);
+        if (isFilled(data.style)) parts.push('- Stilius: ' + data.style);
+        parts.push('');
+        parts.push('UŽDUOTIS:');
+        if (isFilled(data.question)) {
+            parts.push(data.question);
+        } else {
+            parts.push('Paruošk skaidrių planą, skaidrių tekstą ir vizualines idėjas. Integracijų su įrankiais nesiūlyk.');
+        }
+        return parts.join('\n');
+    }
+
+    function buildStrategyPrompt(data) {
+        var parts = [];
+
+        parts.push('Rolė: esi mokymo strategijos asistentas mokytojui.');
+        parts.push('');
+        parts.push('STRATEGIJOS KONTEKSTAS:');
+        parts.push('- Klasė: ' + activeClassLevel + ' klasė');
+        if (isFilled(data.topic)) parts.push('- Tema: ' + data.topic);
+        if (isFilled(data.goal)) parts.push('- Tikslas: ' + data.goal);
+        if (isFilled(data.challenges)) parts.push('- Iššūkiai: ' + data.challenges);
+        parts.push('');
+        parts.push('UŽDUOTIS:');
+        if (isFilled(data.question)) {
+            parts.push(data.question);
+        } else {
+            parts.push('Pasiūlyk metodiką, veiklų modelį, diskusijų metodus ir aktyvaus mokymosi idėjas.');
+        }
         return parts.join('\n');
     }
 
     function getGeneratedPrompt() {
         var data = formData[activeMode] || {};
-        var depth = DEPTH_LEVELS[activeDepth];
-
-        if (activeMode === 'MASTER') return buildMasterPrompt(data, depth);
-        if (activeMode === 'DIENOS') return buildDienosPrompt(data, depth);
-        return buildSavaitesPrompt(data, depth);
+        if (activeMode === 'LESSON') return buildLessonPrompt(data);
+        if (activeMode === 'ASSESSMENT') return buildAssessmentPrompt(data);
+        if (activeMode === 'TASKS') return buildTasksPrompt(data);
+        if (activeMode === 'PRESENTATION') return buildPresentationPrompt(data);
+        return buildStrategyPrompt(data);
     }
 
     /* ===== OUTPUT UPDATE ===== */
@@ -306,8 +388,25 @@
         var countEl = document.getElementById('outputCharCount');
         if (countEl) countEl.textContent = String(prompt.length);
 
-        var depthBadge = document.getElementById('depthBadge');
-        if (depthBadge) depthBadge.textContent = DEPTH_LEVELS[activeDepth].label;
+        var classBadge = document.getElementById('classBadge');
+        if (classBadge) classBadge.textContent = activeClassLevel + ' klasė';
+
+        updateStickyCopyVisibility();
+    }
+
+    function setText(id, text) {
+        if (!text) return;
+        var element = document.getElementById(id);
+        if (!element) return;
+        element.textContent = text;
+    }
+
+    function applyCopyFromSot() {
+        setText('heroTitle', COPY_TEXT.heroTitle);
+        setText('heroSubtitle', COPY_TEXT.heroSubtitle);
+        setText('heroCtaPrimary', COPY_TEXT.heroCtaPrimary);
+        setText('heroCtaSecondary', COPY_TEXT.heroCtaSecondary);
+        setText('heroCtaMeta', COPY_TEXT.heroCtaMeta);
     }
 
     /* ===== MODE SWITCHING ===== */
@@ -353,43 +452,22 @@
         });
     }
 
-    /* ===== DEPTH SWITCHING ===== */
+    /* ===== CLASS LEVEL ===== */
 
-    function switchDepth(newDepth) {
-        if (!DEPTH_LEVELS[newDepth] || newDepth === activeDepth) return;
-
-        activeDepth = newDepth;
-
-        document.querySelectorAll('.depth-btn').forEach(function (btn) {
-            var isTarget = btn.getAttribute('data-depth') === newDepth;
-            btn.classList.toggle('is-active', isTarget);
-            btn.setAttribute('aria-checked', isTarget ? 'true' : 'false');
-        });
-
-        try { localStorage.setItem(DEPTH_KEY, newDepth); } catch (_) { /* ignore */ }
-
+    function setClassLevel(level) {
+        var normalized = String(level || '').trim();
+        if (!/^(?:[1-9]|1[0-2])$/.test(normalized)) return;
+        activeClassLevel = normalized;
+        try { localStorage.setItem(CLASS_LEVEL_KEY, activeClassLevel); } catch (_) { /* ignore */ }
         updateOutput();
     }
 
-    function setupDepthKeyboard() {
-        var buttons = Array.prototype.slice.call(document.querySelectorAll('.depth-btn'));
-        if (!buttons.length) return;
-
-        buttons.forEach(function (btn, index) {
-            btn.addEventListener('keydown', function (e) {
-                var targetIndex = index;
-                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') targetIndex = (index + 1) % buttons.length;
-                else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') targetIndex = (index - 1 + buttons.length) % buttons.length;
-                else if (e.key === 'Home') targetIndex = 0;
-                else if (e.key === 'End') targetIndex = buttons.length - 1;
-                else return;
-
-                e.preventDefault();
-                var targetBtn = buttons[targetIndex];
-                if (!targetBtn) return;
-                switchDepth(targetBtn.getAttribute('data-depth'));
-                targetBtn.focus();
-            });
+    function setupClassLevelSelector() {
+        var select = document.getElementById('classLevelSelect');
+        if (!select) return;
+        select.value = activeClassLevel;
+        select.addEventListener('change', function () {
+            setClassLevel(select.value);
         });
     }
 
@@ -429,7 +507,7 @@
         var session = {
             id: Date.now(),
             mode: activeMode,
-            depth: activeDepth,
+            classLevel: activeClassLevel,
             data: JSON.parse(JSON.stringify(formData[activeMode])),
             date: new Date().toLocaleString('lt-LT')
         };
@@ -446,8 +524,10 @@
 
         switchMode(session.mode);
 
-        if (session.depth && DEPTH_LEVELS[session.depth]) {
-            switchDepth(session.depth);
+        if (session.classLevel) {
+            setClassLevel(session.classLevel);
+            var classSelect = document.getElementById('classLevelSelect');
+            if (classSelect) classSelect.value = activeClassLevel;
         }
 
         if (session.data) {
@@ -468,8 +548,50 @@
     }
 
     function clearSessions() {
+        var clearBtn = document.getElementById('sessionClearBtn');
+        if (lastClearedSessions) {
+            saveSessions(lastClearedSessions);
+            lastClearedSessions = null;
+            if (clearUndoTimer) {
+                clearTimeout(clearUndoTimer);
+                clearUndoTimer = null;
+            }
+            if (clearBtn) clearBtn.innerHTML = '<i data-lucide="trash-2" class="icon icon--sm"></i> Ištrinti sesijas';
+            if (window.lucide && typeof window.lucide.createIcons === 'function' && clearBtn) {
+                window.lucide.createIcons({ root: clearBtn });
+            }
+            renderSessions();
+            showToastIfAvailable('Sesijos atkurtos.', 'success');
+            return;
+        }
+
+        var sessions = getSessions();
+        if (!sessions.length) {
+            showToastIfAvailable('Sesijų sąrašas jau tuščias.', 'error');
+            return;
+        }
+
+        if (!window.confirm('Ar tikrai nori ištrinti visas išsaugotas sesijas?')) {
+            return;
+        }
+
+        lastClearedSessions = sessions;
         try { localStorage.removeItem(SESSIONS_KEY); } catch (_) { /* ignore */ }
         renderSessions();
+        if (clearBtn) clearBtn.innerHTML = '<i data-lucide="rotate-ccw" class="icon icon--sm"></i> Atkurti sesijas';
+        if (window.lucide && typeof window.lucide.createIcons === 'function' && clearBtn) {
+            window.lucide.createIcons({ root: clearBtn });
+        }
+        showToastIfAvailable('Sesijos ištrintos. Spausk „Atkurti sesijas“ per 8 s.', 'error');
+
+        clearUndoTimer = setTimeout(function () {
+            lastClearedSessions = null;
+            clearUndoTimer = null;
+            if (clearBtn) clearBtn.innerHTML = '<i data-lucide="trash-2" class="icon icon--sm"></i> Ištrinti sesijas';
+            if (window.lucide && typeof window.lucide.createIcons === 'function' && clearBtn) {
+                window.lucide.createIcons({ root: clearBtn });
+            }
+        }, CLEAR_SESSIONS_UNDO_MS);
     }
 
     function renderSessions() {
@@ -559,7 +681,8 @@
                     '<button type="button" class="library-btn" data-library-copy="' + escapeHtml(item.id) + '">' +
                         '<i data-lucide="copy" class="icon icon--sm"></i> Kopijuoti' +
                     '</button>' +
-                '</div>';
+                '</div>' +
+                '<p class="library-card-hint">Įrašo į lauką „Pagrindinis klausimas DI“ – redaguokite formoje.</p>';
 
             grid.appendChild(card);
         });
@@ -593,21 +716,16 @@
             questionField.value = item.prompt;
             formData[activeMode].question = item.prompt;
             updateOutput();
+            questionField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            questionField.focus();
+            showToastIfAvailable('Šablonas įrašytas į klausimo lauką. Redaguokite formoje pagal poreikius.');
         }
     }
 
     function copyLibraryPrompt(id) {
         var item = LIBRARY_PROMPTS.find(function (p) { return p.id === id; });
         if (!item) return;
-
-        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
-            navigator.clipboard.writeText(item.prompt).then(function () {
-                showToastIfAvailable();
-            });
-        } else {
-            fallbackCopy(item.prompt);
-            showToastIfAvailable();
-        }
+        copyTextWithFallback(item.prompt, 'Šablonas nukopijuotas.');
     }
 
     /* ===== RULES ===== */
@@ -636,7 +754,7 @@
 
     function fallbackCopy(text) {
         var ta = document.getElementById('hiddenTextarea');
-        if (!ta) return;
+        if (!ta) return false;
         ta.style.position = 'fixed';
         ta.style.left = '0';
         ta.style.top = '0';
@@ -644,15 +762,79 @@
         ta.value = text;
         ta.focus();
         ta.select();
-        try { document.execCommand('copy'); } catch (_) { /* ignore */ }
+        var copied = false;
+        try { copied = !!document.execCommand('copy'); } catch (_) { /* ignore */ }
         ta.style.position = 'absolute';
         ta.style.left = '-9999px';
         ta.style.opacity = '0';
+        return copied;
     }
 
-    function showToastIfAvailable() {
+    function tryNativeShare(text) {
+        if (!navigator.share || typeof navigator.share !== 'function') {
+            return Promise.resolve(false);
+        }
+        return navigator.share({
+            title: 'DI užklausa',
+            text: text
+        }).then(function () {
+            return true;
+        }).catch(function () {
+            return false;
+        });
+    }
+
+    function copyTextWithFallback(text, successMessage) {
+        var okMessage = successMessage || 'Užklausa nukopijuota.';
+        var errorMessage = 'Nepavyko nukopijuoti. Pažymėk tekstą ir pasirink „Kopijuoti“.';
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+            navigator.clipboard.writeText(text).then(function () {
+                showToastIfAvailable(okMessage, 'success');
+            }).catch(function () {
+                if (fallbackCopy(text)) {
+                    showToastIfAvailable(okMessage, 'success');
+                    return;
+                }
+                tryNativeShare(text).then(function (shared) {
+                    if (shared) {
+                        showToastIfAvailable('Atidarytas bendrinimo langas.', 'success');
+                        return;
+                    }
+                    showToastIfAvailable(errorMessage, 'error');
+                });
+            });
+            return;
+        }
+
+        if (fallbackCopy(text)) {
+            showToastIfAvailable(okMessage, 'success');
+            return;
+        }
+        tryNativeShare(text).then(function (shared) {
+            if (shared) {
+                showToastIfAvailable('Atidarytas bendrinimo langas.', 'success');
+                return;
+            }
+            showToastIfAvailable(errorMessage, 'error');
+        });
+    }
+
+    function showToastIfAvailable(message, status) {
         var toast = document.getElementById('toast');
         if (!toast) return;
+        var msgEl = document.getElementById('toastMessage');
+        if (msgEl) msgEl.textContent = message !== undefined ? message : 'Užklausa nukopijuota.';
+        var tone = status === 'error' ? 'error' : 'success';
+        toast.classList.remove('is-success', 'is-error');
+        toast.classList.add(tone === 'error' ? 'is-error' : 'is-success');
+        toast.setAttribute('aria-label', tone === 'error' ? 'Klaidos pranešimas' : 'Sėkmės pranešimas');
+        var icon = toast.querySelector('.toast-icon .icon');
+        if (icon) {
+            icon.setAttribute('data-lucide', tone === 'error' ? 'alert-circle' : 'check');
+            if (window.lucide && typeof window.lucide.createIcons === 'function') {
+                window.lucide.createIcons({ root: toast });
+            }
+        }
         toast.classList.add('show');
         var progress = document.getElementById('toastProgress');
         if (progress) {
@@ -665,14 +847,7 @@
 
     function doCopyOutput() {
         var text = getGeneratedPrompt();
-        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
-            navigator.clipboard.writeText(text).then(function () {
-                showToastIfAvailable();
-            });
-        } else {
-            fallbackCopy(text);
-            showToastIfAvailable();
-        }
+        copyTextWithFallback(text, 'Užklausa nukopijuota.');
     }
 
     function openExternalTool(toolKey) {
@@ -704,6 +879,12 @@
     function setTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
         try { localStorage.setItem(THEME_KEY, theme); } catch (_) { /* ignore */ }
+        var palette = THEME_TOKENS && THEME_TOKENS[theme];
+        if (palette && typeof palette === 'object') {
+            Object.keys(palette).forEach(function (key) {
+                document.documentElement.style.setProperty(key, String(palette[key]));
+            });
+        }
 
         var icon = document.querySelector('#themeToggleBtn i');
         if (icon) {
@@ -712,6 +893,16 @@
                 window.lucide.createIcons({ root: document.getElementById('themeToggleBtn') });
             }
         }
+        updateThemeToggleA11y(theme);
+    }
+
+    function updateThemeToggleA11y(theme) {
+        var btn = document.getElementById('themeToggleBtn');
+        if (!btn) return;
+        var isDark = theme === 'dark';
+        btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+        btn.setAttribute('aria-label', isDark ? 'Perjungti į šviesų režimą' : 'Perjungti į tamsų režimą');
+        btn.setAttribute('title', 'Keisti spalvų režimą');
     }
 
     function setupThemeToggle() {
@@ -719,7 +910,13 @@
         if (!btn) return;
 
         var initial = 'light';
-        try { initial = localStorage.getItem(THEME_KEY) || initial; } catch (_) { /* ignore */ }
+        var storedTheme = null;
+        try { storedTheme = localStorage.getItem(THEME_KEY); } catch (_) { /* ignore */ }
+        if (storedTheme === 'light' || storedTheme === 'dark') {
+            initial = storedTheme;
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initial = 'dark';
+        }
         setTheme(initial);
 
         btn.addEventListener('click', function () {
@@ -734,19 +931,11 @@
     window._getMiniPromptText = getGeneratedPrompt;
 
     /* ===== INIT ===== */
-
-    document.addEventListener('DOMContentLoaded', function () {
-        // Restore depth
+    function initializeApp() {
+        // Restore class level
         try {
-            var storedDepth = localStorage.getItem(DEPTH_KEY);
-            if (storedDepth && DEPTH_LEVELS[storedDepth]) {
-                activeDepth = storedDepth;
-                document.querySelectorAll('.depth-btn').forEach(function (btn) {
-                    var isTarget = btn.getAttribute('data-depth') === storedDepth;
-                    btn.classList.toggle('is-active', isTarget);
-                    btn.setAttribute('aria-checked', isTarget ? 'true' : 'false');
-                });
-            }
+            var storedClassLevel = localStorage.getItem(CLASS_LEVEL_KEY);
+            if (storedClassLevel) setClassLevel(storedClassLevel);
         } catch (_) { /* ignore */ }
 
         // Mode tabs
@@ -757,13 +946,8 @@
         });
         setupModeTabsKeyboard();
 
-        // Depth buttons
-        document.querySelectorAll('.depth-btn').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                switchDepth(btn.getAttribute('data-depth'));
-            });
-        });
-        setupDepthKeyboard();
+        // Class selector
+        setupClassLevelSelector();
 
         // Form inputs
         document.querySelectorAll('.ops-form input, .ops-form select, .ops-form textarea').forEach(function (field) {
@@ -795,8 +979,17 @@
 
         // Theme
         setupThemeToggle();
+        applyCopyFromSot();
 
         // Initial output
         updateOutput();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        loadSotConfig().then(function (config) {
+            assignSotConfig(config);
+            initFormData();
+            initializeApp();
+        });
     });
 })();
