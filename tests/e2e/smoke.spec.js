@@ -38,5 +38,15 @@ for (const viewport of viewports) {
       });
       expect(hasOverflow).toBeFalsy();
     });
+
+    test('mobile journey: journey-next link and step anchors visible', async ({ page }) => {
+      await page.goto('/');
+      await expect(page.locator('#journeyNextWrap')).toBeVisible();
+      await expect(page.locator('#journeyNextLink')).toHaveAttribute('href', '#opsOutputSection');
+      await expect(page.locator('.header-step[href="#opsForm"]')).toBeVisible();
+      await expect(page.locator('.header-step[href="#opsOutputSection"]')).toBeVisible();
+      await page.click('a[href="#opsOutputSection"]');
+      await expect(page.locator('#opsOutputSection')).toBeInViewport({ timeout: 3000 });
+    });
   });
 }

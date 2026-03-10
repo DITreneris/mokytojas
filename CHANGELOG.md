@@ -10,6 +10,7 @@ Formatas pagal [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), versija
 - Mobilėje: nuoroda „Žiūrėti sugeneruotą užklausą“ po forma (`.journey-next-wrap`) – orientacija į kitą žingsnį.
 - DPK paaiškinimas: `title="DI Pamokų Kūrėjas"` ant top-nav brand (tooltip hover/focus).
 - 320px/360px layout: `min-width: 0` ir `word-break` pataisos, kad išvengtum horizontalaus scroll siauroms ekranams.
+- Smoke testas „mobile journey“: 320/375/768 px viewport'e tikrinamas `#journeyNextWrap` matomumas, žingsnių nuorodos į `#opsForm` / `#opsOutputSection` ir scroll į rezultatą.
 
 ### Pakeista
 - Hero nuorodų click: visi keturi žingsniai scroll'ina į teisingą sekciją; accordion atidaromas tik „Biblioteka“ ir „Taisyklės“.
