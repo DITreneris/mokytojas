@@ -1041,6 +1041,38 @@ body {
     outline-offset: 2px;
 }
 
+/* ===== JOURNEY NEXT (MOBILE) ===== */
+.journey-next-wrap {
+    display: none;
+}
+
+.journey-next-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    min-height: 44px;
+    border-radius: var(--r-btn);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--surface-2);
+    border: 1px solid var(--border-subtle);
+    text-decoration: none;
+    transition: background var(--duration-normal) var(--ease-out), border-color var(--duration-normal) var(--ease-out);
+}
+
+.journey-next-link:hover {
+    background: var(--primary-50);
+    border-color: var(--primary);
+}
+
+.journey-next-link:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
 /* ===== SESSIONS PANEL ===== */
 .ops-sessions {
     background: var(--surface-1);
@@ -1171,6 +1203,8 @@ body {
 
 #main-content,
 #operationsCenter,
+#opsForm,
+#opsOutputSection,
 #library,
 #rules {
     scroll-margin-top: calc(94px + var(--safe-top));
@@ -2170,6 +2204,15 @@ body {
         font-size: 13px;
         justify-self: stretch;
     }
+    .journey-next-wrap {
+        display: block;
+        text-align: center;
+        margin-bottom: var(--space-16);
+    }
+    .journey-next-link {
+        width: 100%;
+        max-width: 320px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -2198,6 +2241,8 @@ body {
         padding: var(--space-16);
     }
     .collapsible-chevron { justify-self: end; }
+    .collapsible-title,
+    .collapsible-value { word-break: break-word; overflow-wrap: break-word; min-width: 0; }
     .ops-output-footer p { font-size: 13px; }
     .session-btn { width: 100%; justify-content: center; }
     .community { padding: 24px 16px; }
@@ -2206,6 +2251,18 @@ body {
     .footer { padding: 24px 16px; }
     .ops-output { padding: var(--space-20) var(--space-16); }
     .library-card { padding: var(--space-16); }
+}
+
+/* ===== 320px NARROW LAYOUT ===== */
+@media (max-width: 360px) {
+    .top-nav-inner { min-width: 0; }
+    .header-steps li { min-width: 0; }
+    .mode-tabs { min-width: 0; }
+    .collapsible-toggle { min-width: 0; }
+    .ops-output-footer { min-width: 0; }
+    .footer .tags { flex-wrap: wrap; min-width: 0; }
+    .footer .tags .tag { min-width: 0; }
+    .container { padding-left: calc(12px + var(--safe-left)); padding-right: calc(12px + var(--safe-right)); }
 }
 
 /* ===== PRINT ===== */

@@ -81,19 +81,56 @@
             openOnly(sectionId);
         };
 
+        var scrollSpySectionIds = ['operationsCenter', 'opsForm', 'opsOutputSection', 'library'];
+        var scrollSpySections = scrollSpySectionIds.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+        var activeSectionId = scrollSpySectionIds[0];
+
+        function setActiveStepBySectionId(sectionId) {
+            if (!sectionId) return;
+            activeSectionId = sectionId;
+            var steps = document.querySelectorAll('.header-steps .header-step');
+            steps.forEach(function (link) {
+                var href = link.getAttribute('href') || '';
+                var isMatch = href === '#' + sectionId;
+                link.classList.toggle('is-active', isMatch);
+            });
+        }
+
+        if (scrollSpySections.length > 0 && typeof IntersectionObserver !== 'undefined') {
+            var observer = new IntersectionObserver(function (entries) {
+                var intersecting = {};
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        var id = entry.target.id;
+                        if (scrollSpySectionIds.indexOf(id) !== -1) {
+                            intersecting[id] = entry.intersectionRatio;
+                        }
+                    }
+                });
+                for (var i = 0; i < scrollSpySectionIds.length; i++) {
+                    if (intersecting[scrollSpySectionIds[i]]) {
+                        setActiveStepBySectionId(scrollSpySectionIds[i]);
+                        return;
+                    }
+                }
+            }, { root: null, rootMargin: '-80px 0px -40% 0px', threshold: [0, 0.1, 0.2] });
+            scrollSpySections.forEach(function (el) { observer.observe(el); });
+        }
+
         var heroLinks = document.querySelectorAll('.header-step[href]');
         heroLinks.forEach(function (link) {
             link.addEventListener('click', function (e) {
                 var hash = link.getAttribute('href');
-                if (!hash) return;
+                if (!hash || hash === '#') return;
                 var sectionId = hash.replace('#', '');
-                var matchingItem = items.find(function (i) { return i.id === sectionId; });
-                if (matchingItem) {
-                    e.preventDefault();
+                var target = document.getElementById(sectionId);
+                if (!target) return;
+                e.preventDefault();
+                if (sectionId === 'library' || sectionId === 'rules') {
                     openOnly(sectionId);
-                    var target = document.getElementById(sectionId);
-                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                setActiveStepBySectionId(sectionId);
             });
         });
 

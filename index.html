@@ -15,7 +15,7 @@
 
     <nav class="top-nav" aria-label="Greita navigacija">
         <div class="top-nav-inner">
-            <a href="#main-content" class="top-nav-brand" aria-label="DI Pamokų Kūrėjas">
+            <a href="#main-content" class="top-nav-brand" aria-label="DI Pamokų Kūrėjas" title="DI Pamokų Kūrėjas">
                 <i data-lucide="command" class="icon icon--sm"></i>
                 <span class="top-nav-brand-text-full">DI Pamokų Kūrėjas</span>
                 <span class="top-nav-brand-text-short" aria-hidden="true">DPK</span>
@@ -42,8 +42,8 @@
             <p id="heroSubtitle">Sukurk aiškią DI užklausą pamokai, užduotims ar testui per kelias minutes.</p>
             <ul class="header-steps" aria-label="Darbo žingsniai">
                 <li><a href="#operationsCenter" class="header-step is-active"><span class="header-step-num">1</span> Režimas</a></li>
-                <li><a href="#operationsCenter" class="header-step"><span class="header-step-num">2</span> Forma</a></li>
-                <li><a href="#operationsCenter" class="header-step"><span class="header-step-num">3</span> Rezultatas</a></li>
+                <li><a href="#opsForm" class="header-step"><span class="header-step-num">2</span> Forma</a></li>
+                <li><a href="#opsOutputSection" class="header-step"><span class="header-step-num">3</span> Rezultatas</a></li>
                 <li><a href="#library" class="header-step"><span class="header-step-num">4</span> Biblioteka</a></li>
             </ul>
             <div class="header-cta">
@@ -262,9 +262,13 @@
 
                 </div>
 
+                <div class="journey-next-wrap" id="journeyNextWrap">
+                    <a href="#opsOutputSection" class="journey-next-link" id="journeyNextLink" aria-label="Pereiti prie sugeneruotos užklausos">Žiūrėti sugeneruotą užklausą</a>
+                </div>
+
                 <!-- OUTPUT SIDEBAR -->
                 <div class="ops-sidebar">
-                    <div class="ops-output" role="region" aria-label="Sugeneruota DI užklausa">
+                    <div class="ops-output" id="opsOutputSection" role="region" aria-label="Sugeneruota DI užklausa">
                         <div class="ops-output-header">
                             <div class="ops-output-badge">
                                 <span class="pulse"></span>
